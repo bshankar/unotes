@@ -862,7 +862,90 @@ require.cache = Object.create(null);
     use each other without going through the global scope. This style
     is called CommonJS modules.
 
-** Slow loading modules
+** Slow-loading modules
+   - Reading a file from the web is a lot slower than reading from
+     HDD. If every 'require' call fetched something from a server the
+     page would freeze for a very long time.
+
+   - Browserify code. Bundle all dependencies and gather a single big
+     file. Then the browser loads this file.
+   
+   - Asynchronous module definition (AMD) loads dependencies in
+     background and calls the function initializing the modules when
+     dependencies have been loaded.
+
+#+BEGIN_SRC js
+define(["weekDay", "today"], function(weekDay, today) {
+  console.log(weekDay.name(today.dayNumber()));
+});
+#+END_SRC
+
+    - Modules that are loaded this way must themselves contain a call
+      to 'define'
+
+#+BEGIN_SRC js
+define([], function() {
+  var names = ["Sunday", "Monday", "Tuesday", "Wednesday",
+               "Thursday", "Friday", "Saturday"];
+  return {
+    name: function(number) { return names[number]; },
+    number: function(name) { return names.indexOf(name); }
+  };
+});
+#+END_SRC
+
+#+BEGIN_SRC js
+var defineCache = Object.create(null);
+var currentMod = null;
+
+function getModule(name) {
+  if (name in defineCache)
+    return defineCache[name];
+
+  var module = {exports: null,
+                loaded: false,
+                onLoad: []};
+  defineCache[name] = module;
+  backgroundReadFile(name, function(code) {
+    currentMod = module;
+    new Function("", code)();
+  });
+  return module;
+}
+
+function define(depNames, moduleFunction) {
+  var myMod = currentMod;
+  var deps = depNames.map(getModule);
+
+  deps.forEach(function(mod) {
+    if (!mod.loaded)
+      mod.onLoad.push(whenDepsLoaded);
+  });
+
+  function whenDepsLoaded() {
+    if (!deps.every(function(m) { return m.loaded; }))
+      return;
+
+    var args = deps.map(function(m) { return m.exports; });
+    var exports = moduleFunction.apply(null, args);
+    if (myMod) {
+      myMod.exports = exports;
+      myMod.loaded = true;
+      myMod.onLoad.forEach(function(f) { f(); });
+    }
+  }
+  whenDepsLoaded();
+}
+#+END_SRC
+
+** Good Interface design
+
+   - Predictable, familiar
+   - Composability: Use simplest data structures, make functions do
+     single clear thing. Make them pure if possible.
+   - Layered interfaces: One low level interface for complex
+     situations, One simple high level one for routine use. (2nd one
+     can be built with the first)
 
 * Chapter 12: Javascript and the Browser
   - &lt; &gt; are used to put < and > in html
