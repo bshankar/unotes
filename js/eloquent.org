@@ -1,5 +1,7 @@
 #+TITLE: Eloquent Javascript
 
+Solutions to the exercises are [[https://github.com/bshankar/eloquent_js][here]].
+
 * Chapter 1
 ** Numbers
   - 64-bit signed
@@ -719,6 +721,149 @@ while (match = number.exec(input))
    - \w or word character is one of the 26 English alphabets and the underscore.
 
    - \s matches all whitespace characters in Unicode.
+
+* Chapter 10: Modules
+  - Literate programming is bad in most cases. Takes more effort to
+    change the code.
+  - Keep code minimalist and structureless at the start of a project. 
+
+** Motivation
+   - Namespacing, code reuse, code decoupling
+
+** Using functions as namespaces
+
+#+BEGIN_SRC js
+var dayName = function() {
+  var names = ["Sunday", "Monday", "Tuesday", "Wednesday",
+               "Thursday", "Friday", "Saturday"];
+  return function(number) {
+    return names[number];
+  };
+}();
+
+console.log(dayName(3));
+// → Wednesday
+#+END_SRC
+
+  - If an expression starts with the keyword 'function' it is a
+    function expression. If a statement starts ... it is a function
+    declaration. so, (function () ... ) forces it to be interpreted as
+    an expression.
+
+** Objects as interfaces
+   
+   - If we want to add another function to our module, we can't just
+     return the function but wrap the two functions in an object. (awkward!)
+
+#+BEGIN_SRC js
+var weekDay = function() {
+  var names = ["Sunday", "Monday", "Tuesday", "Wednesday",
+               "Thursday", "Friday", "Saturday"];
+  return {
+    name: function(number) { return names[number]; },
+    number: function(name) { return names.indexOf(name); }
+  };
+}();
+
+console.log(weekDay.name(weekDay.number("Sunday")));
+// → Sunday
+#+END_SRC   
+
+    - Using an exports object (commonly used by modules for the
+      browser.)
+    - The module claims a single global variable and wraps its code in
+      a function to have its own private namespace.
+
+#+BEGIN_SRC js
+(function(exports) {
+  var names = ["Sunday", "Monday", "Tuesday", "Wednesday",
+               "Thursday", "Friday", "Saturday"];
+
+  exports.name = function(number) {
+    return names[number];
+  };
+  exports.number = function(name) {
+    return names.indexOf(name);
+  };
+})(this.weekDay = {});
+
+console.log(weekDay.name(weekDay.number("Saturday")));
+// → Saturday
+#+END_SRC
+
+    - Still problematic if two modules try to claim the same name or
+      if you want to load two versions of the same module
+      simultaneously.
+
+** Detaching from global scope
+   
+   - We can directly ask for interface object of another module with
+     'require' function without going through global scope.
+   - 'require(module)' will load the file and return an appropriate
+     interface value.
+   - 'require' solves above problems with 'exports' and prevents
+     accidental use of some modules without stating that you need
+     them.
+
+** Evaluating data as code 
+
+   - eval(str) runs code in the current scope. Security nightmare!
+   - Use function constructor
+
+#+BEGIN_SRC js
+var plusOne = new Function("n", "return n + 1;");
+console.log(plusOne(4));
+// → 5
+#+END_SRC
+
+** require
+
+#+BEGIN_SRC js
+function require(name) {
+  var code = new Function("exports", readFile(name));
+  var exports = {};
+  code(exports);
+  return exports;
+}
+
+console.log(require("weekDay").name(1));
+// → Monday
+#+END_SRC
+
+  - if several modules have the same dependency or if a require is put
+    inside a function that will be called multiple times it will lead
+    to wastage of time and energy.
+  - Solved by caching already loaded module's object and returning
+    it in subsequent requires.
+  - And a module cannot directly export a value other than the exports
+    object.
+  
+  - Can be solved by using another variable 'module' (an object that
+    has property exports). This property initially points at the empty
+    object created by require but can be overwritten with another
+    value to export something else.
+
+#+BEGIN_SRC js
+function require(name) {
+  if (name in require.cache)
+    return require.cache[name];
+
+  var code = new Function("exports, module", readFile(name));
+  var exports = {}, module = {exports: exports};
+  code(exports, module);
+
+  require.cache[name] = module.exports;
+  return module.exports;
+}
+require.cache = Object.create(null);
+#+END_SRC
+
+  - We have a single global variable 'require' for modules to find and
+    use each other without going through the global scope. This style
+    is called CommonJS modules.
+
+** Slow loading modules
+
 * Chapter 12: Javascript and the Browser
   - &lt; &gt; are used to put < and > in html
   - &<word>; is called an entity and will be replaced by the character
