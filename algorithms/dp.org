@@ -6,60 +6,78 @@
 
 * Maximum subarray (Kadane's algorithm)
 
-  best_ending_here = best_so_far = A[0]
+#+BEGIN_SRC 
+best_ending_here = best_so_far = A[0]
   
-  for x in A[1:]:
-    best_ending_here = max(best_ending_here + x, x)
-    best_so_far = max(best_so_far, best_ending_here)
-
+for x in A[1:]:
+  best_ending_here = max(best_ending_here + x, x)
+  best_so_far = max(best_so_far, best_ending_here)
+#+END_SRC
+  
 * Rod cutting
-  
-  cut(p, 0) = 0
-  cut(p, n) = max(p[i] + cut(p, n - i))
 
+#+BEGIN_SRC 
+cut(p, 0) = 0
+cut(p, n) = max(p[i] + cut(p, n - i))
+#+END_SRC  
+  
 * Matrix-chain multiplication
-  
-  m(i, j) = 0                                                  if i == j
-  m(i, j) = max(m(i, k) + m(k + 1, j) + p[i - 1]*p[k]*p[j])    if i < j
 
+#+BEGIN_SRC 
+m(i, j) = 0                                                  if i == j
+m(i, j) = max(m(i, k) + m(k + 1, j) + p[i - 1]*p[k]*p[j])    if i < j
+#+END_SRC  
+  
 * Knapsack problem
 
 ** Unbounded Knapsack
 
-   m[0] = 0
-   m[w] = max(v[i] + m[W - w[i]])
-
+#+BEGIN_SRC 
+m[0] = 0
+m[w] = max(v[i] + m[W - w[i]])
+#+END_SRC
+   
 ** 0/1 Knapsack 
 
-   m[0, w] = 0
-   m[i, w] = m[i - 1, w]     if w[i] > w
-   m[i, w] = max(m[i - 1, w], m[i - 1, w - w[i]] + v[i])
-
+#+BEGIN_SRC 
+m[0, w] = 0
+m[i, w] = m[i - 1, w]     if w[i] > w
+m[i, w] = max(m[i - 1, w], m[i - 1, w - w[i]] + v[i])
+#+END_SRC
+   
 * Longest common subsequence (LCS)
 
-  c(i, j) = 0                                if i = 0 or j = 0
-  c(i, j) = c(i - 1, j - 1) + 1              if i,j > 0 and xi = yj
-  c(i, j) = max(c(i, j - 1), c(i - 1, j))    if i,j > 0 and xi != yj
-
+#+BEGIN_SRC 
+c(i, j) = 0                                if i = 0 or j = 0
+c(i, j) = c(i - 1, j - 1) + 1              if i,j > 0 and xi = yj
+c(i, j) = max(c(i, j - 1), c(i - 1, j))    if i,j > 0 and xi != yj
+#+END_SRC
+  
 ** Longest increasing subsequence (LIS)
-
-   lis(s) = lcs(s, sorted(list(set(s))))
 
    - There is a better O(N log N) algorithm!
 
+#+BEGIN_SRC 
+lis(s) = lcs(s, sorted(list(set(s))))
+#+END_SRC
+
 ** Longest palindrome subsequence (LPS)
 
-   lps(i, j) = 1                                   if i = j
-   lps(i, j) = 2                                   if A[i] = A[j]  and j = i + 1
-   lps(i, j) = 2 + lps(i + 1, j - 1)               if A[i] = A[j]  and j > i + 1
-   lps(i, j) = max(lps(i + 1, j), lps(i, j - 1))   if A[i] != A[j] and j > i + 1
-
+#+BEGIN_SRC 
+lps(i, j) = 1                                   if i = j
+lps(i, j) = 2                                   if A[i] = A[j]  and j = i + 1
+lps(i, j) = 2 + lps(i + 1, j - 1)               if A[i] = A[j]  and j > i + 1
+lps(i, j) = max(lps(i + 1, j), lps(i, j - 1))   if A[i] != A[j] and j > i + 1
+#+END_SRC
+   
 * Partitions
 
-  P(0, k >= 1) = 1
-  P(n, k <= 0) = 0
-  P(n, k) = P(n - k, k) + P(n, k - 1)
-
+#+BEGIN_SRC 
+P(0, k >= 1) = 1
+P(n, k <= 0) = 0
+P(n, k) = P(n - k, k) + P(n, k - 1)
+#+END_SRC
+  
 * Optimal BSTs
 
 * Longest simple path in a DAG
