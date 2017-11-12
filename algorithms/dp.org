@@ -1,0 +1,47 @@
+#+TITLE: Dynamic Programming
+
+* When to use?
+  - Optimal substructure
+  - Overlapping subproblems
+
+* Maximum subarray (Kadane's algorithm)
+
+  best_ending_here = best_so_far = A[0]
+  
+  for x in A[1:]:
+    best_ending_here = max(best_ending_here + x, x)
+    best_so_far = max(best_so_far, best_ending_here)
+
+* Rod cutting
+  
+  cut(p, 0) = 0
+  cut(p, n) = max(p[i] + cut(p, n - i))
+
+* Matrix-chain multiplication
+  
+  m(i, j) = 0                                                  if i == j
+  m(i, j) = max(m(i, k) + m(k + 1, j) + p[i - 1]*p[k]*p[j])    if i < j
+
+* Knapsack problem
+
+* Longest common subsequence
+
+  c(i, j) = 0                                if i = 0 or j = 0
+  c(i, j) = c(i - 1, j - 1) + 1              if i,j > 0 and xi = yj
+  c(i, j) = max(c(i, j - 1), c(i - 1, j))    if i,j > 0 and xi != yj
+
+* Longest increasing subsequence
+
+* Longest palindrome subsequence
+
+* Partitions
+
+  P(0, k >= 1) = 1
+  P(n, k <= 0) = 0
+  P(n, k) = P(n - k, k) + P(n, k - 1)
+
+* Optimal BSTs
+
+* Longest simple path in a DAG
+
+* Seam carving
