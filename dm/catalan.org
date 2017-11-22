@@ -1,0 +1,49 @@
+#+TITLE: Catalan number
+#+STARTUP: latexpreview
+
+* Expression
+
+ $C_n = {2n\choose n} - {2n\choose n+1} = {1\over n+1}{2n\choose n} \quad\text{ for }n\ge 0$
+
+* Recurrence relations
+
+$C_0 = 1 \quad \mbox{and} \quad C_{n+1}=\sum_{i=0}^{n}C_i\,C_{n-i}\quad\text{for }n\ge 0$
+
+$C_0 = 1 \quad \mbox{and} \quad C_{n+1}=\frac{2(2n+1)}{n+2}C_n$
+
+* $C_n$ is 
+** Dyck words
+  - A Dyck word is a string consisting of n X's and n Y's such that no
+    initial segment of the string has more Y's than X's.
+  - Number of Dyck words of length *2n*.
+
+** Parenthesis
+   - Number of ways to correctly match n pairs of parenthesis.
+   - Number of ways to parenthesize n + 1 factors.
+
+** Binary trees
+   - Full binary trees with n + 1 leaves
+   - Number of binary trees with n nodes.
+
+** Lattice paths
+   - Number of monotonic lattice paths on an NxN grid that don't go
+     above the diagonal.
+
+** Convex polygon
+   - Number of ways to cut a CP with n + 2 sides.
+   - Number of ways to pair vertices of a 2n-gon without intersections.
+
+**  Permutations
+   - Number of stack-sortable permutations of {1, ... , n} (Avoids
+     permutation pattern 231)
+
+** Stair step
+   - Number of ways to tile a stairstep of height n with n rectangles.
+
+** Mountains
+   - Number of ways to draw mountains with up strokes, down strokes
+     such that they never go below the horizon.
+
+
+* Bijective proof
+  [[https://en.wikipedia.org/wiki/Catalan_number#Third_proof][Wikipedia]]

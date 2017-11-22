@@ -3,7 +3,7 @@
 * When to use?
   - Optimal substructure
   - Overlapping subproblems
-
+    
 * Maximum subarray (Kadane's algorithm)
 
 #+BEGIN_SRC 
