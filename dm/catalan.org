@@ -45,4 +45,29 @@ $C_0 = 1 \quad \mbox{and} \quad C_{n+1}=\frac{2(2n+1)}{n+2}C_n$
      such that they never go below the horizon.
 
 * Bijective proof
-  [[https://en.wikipedia.org/wiki/Catalan_number#Third_proof][Wikipedia]]
+
+** Dyck words
+   - Number of ways to arrange n X's and n Y's in a string is  ${2n \choose n}$
+*** Measure of badness (b)
+    - Count the number of unmatched Y's.
+    - Example: b(XYYYXXXY) = 2
+
+*** Algorithm to reduce badness by 1   
+    - Swap everything before and after first X after which X's and Y's
+      are balanced again after initial imbalance.
+    - XYYYX *X* XY -->  XY *X* XYYYX (b = 1)
+    - This can always be done. So there are equal number of
+      permutations with all values of b (0, 1, 2, ..., n)
+    - Number of permutations with badness 0 is
+
+      $\frac{1}{n + 1} {2n \choose n}$
+
+** Binary trees
+   - Dyck words reduces to balancing parenthesis.
+   - A n-node binary tree can be converted to a balanced parenthesis
+     - Left child -> enclosed by parent
+     - Right child -> beside parent on the left
+
+     /\
+     \ \     --->     (())()()(())
+     /
