@@ -1,0 +1,18 @@
+#+TITLE: Linear Algebra in machine learning
+
+Contains some resources to learn from.
+[[amitkaps.com][Website]]
+
+* Youtube 
+  - 3 blue 1 brown: essence of linear algebra.
+
+* Github
+  - hackermath
+  - @amitkaps
+
+* MIT OCW
+  - Gilbert Strant
+
+* Js frameworks
+  - 3.js
+  - 2.js
