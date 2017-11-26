@@ -954,6 +954,24 @@ function define(depNames, moduleFunction) {
   - &amp, &quot for & and '
 
 * Chapter 13: The DOM
+** Dom is a tree
+   - document.documentElement is the root
+   - nodes: regular elements (HTML tags) Ex: document.body
+   - nodes can have children
+   - some of these children can be text or comments <!-- -->
+*** nodeType property
+    - Every node has it
+    - It is a numeric code that identifies the type of node
+
+      | Type             | value | Constant Property     |
+      |------------------+-------+-----------------------|
+      | Regular elements |     1 | document.ELEMENT_NODE |
+      | Text nodes       |     3 | document.TEXT_NODE    |
+      | Comment nodes    |     8 | document.COMMENT_NODE |
+
+** The standard
+   - childNodes property gives an array like object (NodeList type)
+
 ** Moving through the Tree
    - childNodes, firstChild, lastChild, previousSibling, nextSibling, parentNode
 
@@ -973,3 +991,120 @@ function talksAbout(node, string) {
 console.log(talksAbout(document.body, "book"));
 // → true
 #+END_SRC
+
+** Finding elements
+   - Following a hard coded path to find a node is a *bad* idea.
+   - <node>.getElementsByTagName(tag) returns an array-like object of
+     children of <node> that match this tag.
+   - getElementById, getElementsByClassName
+
+** Changing the document
+   - removeChild, appendChild,
+   - insertBefore(node1, node2): inserts node1 before node2
+   - replaceChild(newNode, oldNode)
+
+** Converting to array
+   - Array.from, Array.prototype.slice.call(arrayish, 0)
+
+** Attributes
+   - some commonly used attributes can be accessed through a property
+   - For custom attributes: getAttribute, setAttribute
+   - Recommended to prefix custom attributes with 'data-'
+   - Commonly used attribute 'class' is a reserved keyword in js is
+     accessed by the property className and 'class' by using
+     getAttribute and setAttribute.
+
+** Layout
+   - Block elements <p>, <h1>
+   - Inline elements <strong> <a>
+   - Browser calculates size and position of each element
+   - OffsetWidth, OffsetHeight gives space element takes in pixels
+   - clientWidth, clientHeight gives space inside element (ignoring
+     border width)
+   - getBoundingClientRect -> {top, bottom, left, right} in px
+     relative to top left of screen.
+   - pageXOffset, pageYOffset + current scroll position = pos relative
+     to doc
+   - Browsers do lazy re-layout. It is required when js that changed
+     the document finishes or properties like offsetHeight are read.
+   - Reading layout info + changing layout repeatedly = *slow*
+
+** Styling
+   - display: block, display: none
+   - style properties contain dashes. Awkward in Js so we camelcase
+     them. Ex: font-family is style.fontFamily
+
+** Cascading styles
+   - Most recent CSS rule wins
+   - .subtle (class), #header (tag)
+   - Higher specificity wins over recent. Ex: p.a beats .a
+   - p > a {...} for all direct children of <p>
+   - p a {...} direct/indirect.
+
+** Query selectors
+   - document/<node>.querySelectAll(selector)  --> array-like object
+     containing all elements it matches
+   - querySelector returns first match
+   - The object returned by querySelector, querySelectAll is not live
+     (doesn't change with the document) unlike methods like getElementsByTagName
+
+#+BEGIN_SRC javascript
+<p>And if you go chasing
+  <span class="animal">rabbits</span></p>
+<p>And you know you're going to fall</p>
+<p>Tell 'em a <span class="character">hookah smoking
+  <span class="animal">caterpillar</span></span></p>
+<p>Has given you the call</p>
+
+<script>
+  function count(selector) {
+    return document.querySelectorAll(selector).length;
+  }
+  console.log(count("p"));           // All <p> elements
+  // → 4
+  console.log(count(".animal"));     // Class animal
+  // → 2
+  console.log(count("p .animal"));   // Animal inside of <p>
+  // → 2
+  console.log(count("p > .animal")); // Direct child of <p>
+  // → 1
+</script>
+#+END_SRC
+
+** Positioning and Animating
+   - position style property. default: static (sits in normal place),
+     relative: takes top, left relative to normal place, 
+     
+     | position | meaning                                              |
+     |----------+------------------------------------------------------|
+     | static   | sits at normal place                                 |
+     | relative | {top, left} relative to normal place                 |
+     | absolute | {top, left} relative to nearest non-static enclosing |
+     |          | element or the document (if none)                    |
+
+#+BEGIN_SRC javascript
+<p style="text-align: center">
+  <img src="img/cat.png" style="position: relative">
+</p>
+<script>
+  var cat = document.querySelector("img");
+  var angle = 0, lastTime = null;
+  function animate(time) {
+    if (lastTime != null)
+      angle += (time - lastTime) * 0.001;
+    lastTime = time;
+    cat.style.top = (Math.sin(angle) * 20) + "px";
+    cat.style.left = (Math.cos(angle) * 200) + "px";
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+</script>
+#+END_SRC
+
+  - requestAnimationFrame schedules animate(...) to run at next
+    repainting of the screen (after 1/60s). animate will call
+    requestAnimationFrame and schedule the next update.
+  - Updating DOM in a loop would make the page unresponsive.
+  - angle(dt) ensures smooth animation
+  - styles need units (px, ems, cm etc)
+  - em: relative to font size of the element, rem: of root element
