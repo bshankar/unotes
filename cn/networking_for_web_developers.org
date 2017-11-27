@@ -70,3 +70,50 @@ printf 'HTTP/1.1 302 Moved\r\nLocation: https://www.eff.org/' | nc -l 2345
 #+BEGIN_SRC shell
 sudo lsof -i
 #+END_SRC
+
+* Names and addresses
+  - Hosts: a machine on the internet that might host services
+  - Endpoints: 2 machines/programs that are communicating over the network
+  - DNS client code (the resolver) is built into the OS
+  - Alias is done with CNAME
+
+    | DNS record type | Full form   | Meaning                                            |
+    |-----------------+-------------+----------------------------------------------------|
+    | CNAME           | Canonical   | domain name is an alias for the 'canonical' domain |
+    | A               | A record    | IPv4 --> domain name                               |
+    | AAAA            | Quad-A      | IPv6 --> domain name                               |
+    | NS              | Name server | what DNS servers have the record of that domain    |
+
+  - A record for <>.com --> nameserver for <>.com --> NS record for
+    <>.com --> nameserver for com --> NS record for com --> root servers
+  - com/org/edu/net/country code/... are Global Top Level Domains
+
+  - Client -> local caching server (no) --> root servers (NS com) -->
+    com servers (<> NS) --> <>.com servers (A record) --> cache of
+    caching server
+
+  - DNS records have TTL (time to live) of generally 60s to prevent
+    stale data.
+  - host header in Http
+  - search domain: makes resolver look up names inside a domain.
+
+  - IPv4: a.b.c.d each 1 byte. 32-bit, $2^{32}$ ~ 4.29 billion possible IPs
+
+  - IPv6: 128-bit, $2^{128}$ ~ 3.4e38 possible IPs
+
+** Packets
+   - Contains IPs of from and to.
+
+#+BEGIN_SRC shell
+ping google.com  # look up the ip address and ping it
+#+END_SRC
+
+** host
+
+#+BEGIN_SRC shell
+host google.com
+host -t a google.com
+#+END_SRC
+
+** dig
+   - Gives almost the same info as host in a script friendly way.
