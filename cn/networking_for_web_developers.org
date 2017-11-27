@@ -1,0 +1,72 @@
+#+TITLE: Networking for web developers
+
+* From ping to HTTP
+** Setup
+  - +Install vagrant, ubuntu/trusty64+
+  - install openbsd-netcat, tcpdump, traceroute, mtr, dnsutils, lsof
+
+** Try these commands
+  
+#+BEGIN_SRC shell
+ip addr show enp5s0
+ip route show
+ping -c3 8.8.8.8
+host -t aaaa google.com
+host -t mx udacity.com
+printf 'HEAD / HTTP/1.1\r\nHost: www.udacity.com \r\n\r\n' \ | nc www.udacity.com 80
+tcpdump -n -c3 -i enp0s29u1u2 port 22
+traceroute www.udacity.com
+mtr udacity.com
+#+END_SRC
+
+** Ping
+  - sends an echo request
+  - goes to receiver's OS (no server)
+  - receiver responds back
+
+#+BEGIN_SRC shell
+printf 'HEAD / HTTP/1.1\r\nHost: en.wikipedia.org\r\n\r\n' | nc en.wikipedia.org 80
+#+END_SRC
+
+** Netcat
+  - printf converts \r\n into newlines but echo doesn't.
+  - TCP is implemented in the OS. nc is a wrapper around TCP.
+  - HTTP is implemented in the browser.
+  - rst (reset packet) is an error when a message is sent to a port on
+    which no server is listening.
+  - nc -l can handle only a single connection (unlike web servers for Ex.)
+
+#+BEGIN_SRC shell
+nc -l 3456             # listen to port 3456 in one terminal
+nc localhost 3456      # connect and send some text (works both ways, using just TCP)
+# disconnect with Ctrl D (Unix end of input signal), or Ctrl C
+#+END_SRC
+
+  - Be a web browser
+
+#+BEGIN_SRC shell
+printf 'HTTP/1.1 302 Moved\r\nLocation: https://www.eff.org/' | nc -l 2345
+#+END_SRC
+
+** IETF model
+
+   | Layer       | Protocols      | Concepts                       |
+   |-------------+----------------+--------------------------------|
+   | Application | HTTP, SSH      | Urls, passwords                |
+   | Transport   | TCP, UDP       | port numbers, sessions         |
+   | Internet    | IP             | IP addresses, routes           |
+   | Hardware    | WiFi, Ethernet | Signal strength, Access points |
+   |             |                |                                |
+
+** HTTP
+   - [[https://en.wikipedia.org/wiki/List_of_HTTP_status_codes][Status codes]]
+   - epoll? in linux
+
+** Ports
+   - non-root user $2^{10}$ to $2^{16}$
+   - root user starts from 1.
+   - Address already in use error.
+
+#+BEGIN_SRC shell
+sudo lsof -i
+#+END_SRC
