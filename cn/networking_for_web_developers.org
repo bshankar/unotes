@@ -63,7 +63,7 @@ printf 'HTTP/1.1 302 Moved\r\nLocation: https://www.eff.org/' | nc -l 2345
    - epoll? in linux
 
 ** Ports
-   - non-root user $2^{10}$ to $2^{16}$
+   - non-root user 2^{10} to 2^{16}
    - root user starts from 1.
    - Address already in use error.
 
@@ -97,9 +97,9 @@ sudo lsof -i
   - host header in Http
   - search domain: makes resolver look up names inside a domain.
 
-  - IPv4: a.b.c.d each 1 byte. 32-bit, $2^{32}$ ~ 4.29 billion possible IPs
+  - IPv4: a.b.c.d each 1 byte. 32-bit, 2^{32} ~ 4.29 billion possible IPs
 
-  - IPv6: 128-bit, $2^{128}$ ~ 3.4e38 possible IPs
+  - IPv6: 128-bit, 2^{128} ~ 3.4e38 possible IPs
 
 ** Packets
    - Contains IPs of from and to.
@@ -117,3 +117,80 @@ host -t a google.com
 
 ** dig
    - Gives almost the same info as host in a script friendly way.
+
+* Addressing and Networks
+
+** Reserved IP addresses
+
+
+[[./ipv4.png]]
+
+  - light green: fully reserved
+  - dark green: partially reserved
+  - cyan: ip multicast
+  - orange: set aside for future but lost because of being blocked as
+    invalid 
+
+  - Just 1/8th are reserved for something other than addressing public hosts.
+  - IPv4 addresses are not just not enough anyways.
+
+** Netblocks and subnets
+   - same network block = same IP prefix, can communicate without a router
+   - 198.51.100.0/24 : 24-bit fixed network part, 8-bit host part
+   
+   - /22 network = 10-bit host part: 2^{10} = 1024 hosts but top,
+     bottom and first addresses (for router) are reserved so only *1021*
+     hosts.
+
+   - subnet mask for a 171.64.0.0/14 Stanford network: 255.252.0.0
+   - and this network has 2^{32 - 14} = 2^18 = 262144 hosts
+
+** Hosts and IP addresses
+   - Each network interface on a host/computer can have >= 0 IP addresses.
+   - Enternet, WiFi, lo, tunnel, virtual machine interface etc
+
+#+BEGIN_SRC shell
+ip addr show
+ifconfig
+#+END_SRC
+
+** Routers and default gateways
+   - router acts as a gateway between networks
+   - Most hosts have 1 IPv4 address but a router has >= 2.
+   - Host on LAN --> default gateway --> rest of internet
+   - default gateway -> default gateway ... --> target host
+
+#+BEGIN_SRC shell
+ip route show default
+netstat -nr
+#+END_SRC
+
+** Network address translation
+   - Private IP addresses (RFC 1918)
+     - 10.0.0.0/8
+     - 172.16.0.0/12
+     - 192.168.0.0/16  with default gateway of 192.168.0.1
+
+   - Private IP addresses are not about /privacy/ but being on an
+     internal network.
+   - The home router gives private IPs to each device connected to
+     it. The public IP assigned to the home router will be the same
+     for all these devices
+   - Private IPs, ports --> NAT --> Public IPs, ports
+   - NAT is *bad*. You cannot easily run a server or develop network
+     apps /without/ centralized servers without hackish workarounds.
+   
+** IPv6
+  - IPv5 is a failed experiment
+  - 340282366920938463463374607431768211456 addresses
+  - Smallest home network is /64
+  - Google's address: 2404:6800:4007:0801:0000:0000:0000:200e
+  - Short form: /2404:6800:4007:801::200e/
+  - 8 x 4 = 32 (IPv4), 16 x 8 = 128 (IPv6)
+   (0 - 255)           (0 - 0xffff)
+
+  - Google's network block is 2404:6800/32 while on IPv4 it is a
+    single address, on IPv6 it is a huge /96 network with subnet and
+    host addresses.
+
+  - fc00::/7, fdxx:xxxx:xxxx… are private IPs
