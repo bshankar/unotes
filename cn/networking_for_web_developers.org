@@ -194,3 +194,23 @@ netstat -nr
     host addresses.
 
   - fc00::/7, fdxx:xxxx:xxxx… are private IPs
+* Protocol Layers
+
+  | Protocol | Concepts                         | Where code is               | failures                     |
+  |----------+----------------------------------+-----------------------------+------------------------------|
+  | HTTP     | resources, URLs, verbs, Cookies  | Apache, Flask, browsers     | error codes, slow res        |
+  | TCP      | Ports, sessions, stream, sockets | OS kernel, System libraries | broken connections, timeouts |
+  | IP       | IP addresses, packets            | OS kernel, routers          | various                      |
+  | WiFi     | access points, WPA               | device drivers              | network unavailable          |
+
+  - Ping uses ICMP. DNS, NTP use UDP
+
+#+BEGIN_SRC shell
+sudo tcpdump -n host 8.8.8.8
+ping -c3 8.8.8.8
+
+sudo tcpdump -n port 53  # listen to DNS requests
+
+sudo tcpdump -n host example.net
+printf 'HEAD / HTTP/1.1\r\nHost: example.net\r\n\r\n' | nc example.net 80  # hint: use wc
+#+END_SRC
