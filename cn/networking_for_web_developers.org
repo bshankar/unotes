@@ -23,6 +23,7 @@ mtr udacity.com
   - sends an echo request
   - goes to receiver's OS (no server)
   - receiver responds back
+  - Round trip time
 
 #+BEGIN_SRC shell
 printf 'HEAD / HTTP/1.1\r\nHost: en.wikipedia.org\r\n\r\n' | nc en.wikipedia.org 80
@@ -259,6 +260,64 @@ printf 'HEAD / HTTP/1.1\r\nHost: example.net\r\n\r\n' | nc example.net 80  # hin
 *** Four-way teardown                                                                     
     - [F.], [F.], [.], [.] in some (meaningful) order                                   
 
+*** Packets drop
+
+*** TCP errors
+
+    - Exponential backoff
+
+#+BEGIN_SRC shell
+sudo tcpdump -n port 12345
+nc udacity.com 12345
+#+END_SRC
+
 [[./tcp.png]]
 
 [[./udp.png]]
+
+* Big networks
+
+** Hops
+   - Airport codes
+
+#+BEGIN_SRC shell
+traceroute google.com
+#+END_SRC
+
+** How does traceroute work?
+   - Ability to trace out packet paths wasn't intentionally built into
+     the internet protocols
+   - Every packet has a /TTL/ (time to live) field to prevent infinite loops
+   - When TTL expires a router sends an tiny error message to the
+     original source.
+   - "TTL Expired" + "From router"
+
+** Bandwidth * delay
+   - Amount of data that's stuck in the pipe at any instant.
+
+** Middleboxes
+   - Intrusion detection systems, load balancers ...
+   - Middle-box only if it is a separate device from client and server
+   - So, server side firewalls like Linux's iptables are not.
+   - Middle boxes can also alter traffic, replacing a webpage with an
+     error message.
+
+*** Firewalls and filters
+    - Inspect, modify and filter network traffic
+    - Drop all packets except intended (host, port). This prevents
+      outside attacks on other machines on the network like backend
+      databases, administrative systems
+
+    - Extra work for app developer. Many non-Web applications use HTTP
+      because this port is almost always open.
+
+    - Countries block websites with large-scale firewalls.
+    - [[http://www.telegraph.co.uk/news/newstopics/howaboutthat/2667634/The-Clbuttic-Mistake-When-obscenity-filters-go-wrong.html][The Clbuttic mistake]]
+
+*** Proxies and NAT
+    - NAT devices uses port numbers to match up connections inside and
+      outside.
+    - Carrier grade NAT + firewall
+    - Web proxies: browsers -> proxy -> web servers
+    - Traffic from a busy NAT ~ a busy proxy from the standpoint of a
+      site operator.
