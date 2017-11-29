@@ -6,7 +6,7 @@
   - install openbsd-netcat, tcpdump, traceroute, mtr, dnsutils, lsof
 
 ** Try these commands
-  
+
 #+BEGIN_SRC shell
 ip addr show enp5s0
 ip route show
@@ -129,7 +129,7 @@ host -t a google.com
   - dark green: partially reserved
   - cyan: ip multicast
   - orange: set aside for future but lost because of being blocked as
-    invalid 
+    invalid
 
   - Just 1/8th are reserved for something other than addressing public hosts.
   - IPv4 addresses are not just not enough anyways.
@@ -137,7 +137,7 @@ host -t a google.com
 ** Netblocks and subnets
    - same network block = same IP prefix, can communicate without a router
    - 198.51.100.0/24 : 24-bit fixed network part, 8-bit host part
-   
+
    - /22 network = 10-bit host part: 2^{10} = 1024 hosts but top,
      bottom and first addresses (for router) are reserved so only *1021*
      hosts.
@@ -179,7 +179,7 @@ netstat -nr
    - Private IPs, ports --> NAT --> Public IPs, ports
    - NAT is *bad*. You cannot easily run a server or develop network
      apps /without/ centralized servers without hackish workarounds.
-   
+
 ** IPv6
   - IPv5 is a failed experiment
   - 340282366920938463463374607431768211456 addresses
@@ -214,3 +214,48 @@ sudo tcpdump -n port 53  # listen to DNS requests
 sudo tcpdump -n host example.net
 printf 'HEAD / HTTP/1.1\r\nHost: example.net\r\n\r\n' | nc example.net 80  # hint: use wc
 #+END_SRC
+
+** Sequence diagram
+
+** TCP
+
+  | What TCP does                  | How it does it                  |
+  |--------------------------------+---------------------------------|
+  | Communicate b/n 2 hosts        | IP layer (addresses + routing)  |
+  | Multiple applications per host | port numbers                    |
+  | In-order delivery              | sequence #s                     |
+  | Lossless delivery              | Acknowledgment + retransmission |
+  | Keep connections distinct      | random initial sequence #s      |
+
+  - Ack is the next packet's sequence number you are expecting
+  - Fin
+  
+  * Buffering
+
+*** TCP flags
+
+    - 19:51:58.304117 IP 10.20.27.153.59328 > 93.184.216.34.80: /Flags [S]/, seq 2574797435, 
+      win 26883, options [mss 8961,sackOK,TS val 689168793 ecr 0,nop,wscale 7], length 0
+
+    - [S], [S.], [.], [P.], [F.]
+
+    - A flag is a boolean value that takes 1 bit. Flags usually come in groups
+
+    | Flag    | Name        | Significance                                                            |
+    |---------+-------------+-------------------------------------------------------------------------|
+    | SYN [S] | Synchronize | Opening a new TCP session. Contains new sequence Number                 |
+    | FIN [F] | Finish      | Closing a TCP session normally. Sender is saying they are done sending. |
+    | PSH [P] | Push        | This packet is end of application data (Like a HTTP request)            |
+    | RST [R] | Reset       | Error. Reset (abandon) the session                                      |
+    | ACK [.] | Acknowledge | Acknowledges that its sender has received data from other point         |
+    | URG [U] | Urgent      | Needs to be delivered to the application out of order. Mostly not used  |
+
+    - Almost every packet except the first SYN will have [.] set.
+
+*** Three-way handshake
+    - [S], [.], [.] to create a connection
+
+*** Four-way teardown
+    - [F.], [F.], [.], [.] in some (meaningful) order
+
+*** ICMP, UDP don't have TCP flags
