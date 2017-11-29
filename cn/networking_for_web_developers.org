@@ -251,11 +251,10 @@ printf 'HEAD / HTTP/1.1\r\nHost: example.net\r\n\r\n' | nc example.net 80  # hin
     | URG [U] | Urgent      | Needs to be delivered to the application out of order. Mostly not used  |
 
     - Almost every packet except the first SYN will have [.] set.
+    - ICMP, UDP don't have TCP flags
 
 *** Three-way handshake
     - [S], [.], [.] to create a connection
 
 *** Four-way teardown
     - [F.], [F.], [.], [.] in some (meaningful) order
-
-*** ICMP, UDP don't have TCP flags
