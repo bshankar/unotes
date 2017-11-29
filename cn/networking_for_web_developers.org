@@ -322,3 +322,8 @@ traceroute google.com
     - Web proxies: browsers -> proxy -> web servers
     - Traffic from a busy NAT ~ a busy proxy from the standpoint of a
       site operator.
+
+* Further reading
+  - [[https://en.wikipedia.org/wiki/User_Datagram_Protocol][UDP]]
+  - [[https://en.wikipedia.org/wiki/Network_congestion][Congestion control]]
+  - [[https://en.wikipedia.org/wiki/Error_detection_and_correction][Error detection and correction]]
