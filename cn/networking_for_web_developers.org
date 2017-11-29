@@ -258,7 +258,8 @@ printf 'HEAD / HTTP/1.1\r\nHost: example.net\r\n\r\n' | nc example.net 80  # hin
     - [S], [.], [.] to create a connection                                              
                                                                                         
 *** Four-way teardown                                                                     
-    - [F.], [F.], [.], [.] in some (meaningful) order                                   
+    - [F.], [F.], [.], [.] in some (meaningful) order
+    - Can be done in 3 steps.
 
 *** Packets drop
 
