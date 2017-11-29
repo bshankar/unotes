@@ -259,6 +259,6 @@ printf 'HEAD / HTTP/1.1\r\nHost: example.net\r\n\r\n' | nc example.net 80  # hin
 *** Four-way teardown                                                                     
     - [F.], [F.], [.], [.] in some (meaningful) order                                   
 
-[[./tcp_joke.png]]
+[[./tcp.png]]
 
-[[./udp_joke.png]]
+[[./udp.png]]
