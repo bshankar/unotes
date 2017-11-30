@@ -1,0 +1,102 @@
+#+TITLE: Network Congestion
+
+* Congestive collapse
+  - The stable state with low throughput
+  - 1980s because of TCP's poor retransmission behavior
+
+* Congestion control
+  - Individuals controlling their own rates can achieve network-wide
+    'optimal' allocation
+  - Optimal rate allocation satisfies
+
+    $\max\limits_x \sum_{i}_{}U(x_i) \ni Rx \leq c$
+  - x_i is the rate of flow, c_l is the capacity of the link, r_{li} = 1 if
+    i uses link l otherwise 0
+  - Let U(x) be a strictly increasing concave function (utility) which
+    measures how much benefit a user gets by transmitting at rate x.
+
+** Max-min fairness
+   - Allocation is feasible
+   - Attempt to increase allocation of anyone necessarily results in
+     decrease of some other participant with equal or smaller allocation.
+
+   - May or may not exist. If exists it is unique.
+
+   - If packets are equal in size it reduces to round-robin scheduling
+   - Stable service quality compared to max throughput scheduling
+
+   - Node --> atleast one /bottleneck link/ --> Node
+   - Progressive filling
+
+** Proportionally fair
+   - Compromise based scheduling algorithm
+   - Maximize throughput while allowing all users a minimum level of service
+
+     $\text{priority/data rate} \propto \frac{1}{\text{anticipated resource consumption}}$
+
+*** Weighted fair queuing
+
+    $w_i = \frac{1}{c_i}$
+
+*** User prioritization
+
+    - Maximize P. T is max rate achievable at present, R is historical
+      average rate. \alpha, \beta are parameters.
+
+    $P = \frac{T^{\alpha}}{R^{\beta}}$
+
+
+
+** Ideas for mitigation
+   - Network scheduler: arbitrarily reorder/drop packets during overload
+   - Explicit congestion notification: extension to IP and TCP to add
+     flow control mechanism
+   - TCP congestion control
+
+   - UDP does not control congestion. Applications built on top of it
+     must control it.
+
+   - Admission control: requires permission before new connection
+
+** Side effects
+*** Radio links
+    - Almost always data loss is due to congestion (Assumption)
+    - Not generally true in case of WiFi, 3G etc where data loss
+      occurs due to interference
+    - A radio based physical layer is required for this.
+
+*** Short-lived connections
+    - Slow start protocol performs badly for short connections
+    - Open multiple connections simultaneously or reuse one connection
+      for all files
+
+* TCP congestion control 
+  - Congestion window (maintained by sender)
+  - Slow start after connection starts or after a timeout
+  - Congestion window starts with 2 x MSS, 2x after every RTT 
+
+  - After /ssthresh/ threshold enters congestion avoidance and stays
+    there as long as non duplicate ACKs are received. CW++ every RTT
+
+  - On timeout
+    - CW = 1 MSS
+    - ssthresh = 0.5*CW (CW when segment loss started)
+    - slow start is initialized
+
+** AIMD (Congestion avoidance)
+
+** Fast retransmit
+   - Retransmit after t(RTT)
+
+   - S --- 1 ---> R
+     S <-- 2 ---- R
+     ... loss
+     S --- 5 ---> R
+     S <-- 2 ---- R
+     S --- 6 ---> R
+     S <-- 2 ---- R
+
+   - After 3 duplicate ACKs (for example) retransmit
+
+** Congestion avoidance
+   Vegas, FAST, Cubic, High Speed
