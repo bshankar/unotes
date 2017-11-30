@@ -1,4 +1,5 @@
 #+TITLE: Network Congestion
+#+STARTUP: latexpreview
 
 * Congestive collapse
   - The stable state with low throughput
@@ -45,7 +46,7 @@
 
     $P = \frac{T^{\alpha}}{R^{\beta}}$
 
-
+    
 
 ** Ideas for mitigation
    - Network scheduler: arbitrarily reorder/drop packets during overload
