@@ -3,7 +3,7 @@
 * From ping to HTTP
 ** Setup
   - +Install vagrant, ubuntu/trusty64+
-  - install openbsd-netcat, tcpdump, traceroute, mtr, dnsutils, lsof
+  - install openbsd-netcat, tcpdump, traceroute, mtr, dnsutils, lsof, whois
 
 ** Try these commands
 
@@ -93,9 +93,13 @@ sudo lsof -i
     com servers (<> NS) --> <>.com servers (A record) --> cache of
     caching server
 
+#+BEGIN_SRC shell
+dig +trace google.com @8.8.8.8
+#+END_SRC
+
   - DNS records have TTL (time to live) of generally 60s to prevent
     stale data.
-  - host header in Http
+  - host header in HTTP
   - search domain: makes resolver look up names inside a domain.
 
   - IPv4: a.b.c.d each 1 byte. 32-bit, 2^{32} ~ 4.29 billion possible IPs
