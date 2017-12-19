@@ -1,0 +1,24 @@
+#+TITLE: Postgresql
+
+* Getting started
+  - install postgresql package
+  - set password for newly created postgres user
+  - switch to postgres user, initialize db
+  - start and enable postgresql service
+  - Create a first database user (with same username as linux username)
+  - create a database
+
+#+BEGIN_SRC shell
+$ sudo pacman -S postgresql
+$ sudo passwd postgres
+$ sudo -u postgres -i
+[postgres]$ initdb --locale $LANG -E UTF8 -D '/var/lib/postgres/data'
+[postgres]$ createuser --interactive
+$ createdb <database name>
+#+END_SRC
+
+* Access the db shell
+
+#+BEGIN_SRC shell
+$ psql -d <database name>
+#+END_SRC
