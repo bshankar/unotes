@@ -143,3 +143,67 @@ HAVING condition
 * Managing tables
 
 * Constraints
+** PRIMARY KEY
+  - PRIMARY KEY = NOT NULL + UNIQUE
+  - default name is table name_pk
+
+#+BEGIN_SRC sql
+create TABLE table1 (
+  column1 INTEGER PRIMARY KEY,
+  column2 TEXT,
+  ...
+)
+#+END_SRC
+
+#+BEGIN_SRC sql
+create TABLE table1 (
+  column1 INTEGER,
+  column2 TEXT,
+  ...
+  PRIMARY KEY (column1, column2)
+)
+#+END_SRC
+
+#+BEGIN_SRC sql
+-- naming primary key
+CONSTRAINT constraint_name PRIMARY KEY(column_1, column_2,...)
+#+END_SRC
+
+** Foreign key
+   - Refers to a primary key in another table
+   - Default name is table_column_fkey
+   - ON DELETE RESTRICT: delete row in parent only if all the
+     references have been deleted
+   - CASCADE: delete all referenced rows in child tables if parent's
+     row is deleted
+   - NO ACTION: (default) will raise an error if the constraint is checked
+   - RESTRICT, CASCADE, NO ACTION can be used with ON UPDATE too.
+
+#+BEGIN_SRC sql
+create TABLE table2 (
+...,
+other_id INTEGER REFERENCES table1(id) ON DELETE RESTRICT
+)
+
+-- Another way to define foreign key
+
+create TABLE table2 (
+...,
+other_id INTEGER,
+...
+FOREIGN KEY (other_id) REFERENCES table1(id)
+)
+#+END_SRC
+
+** Check constraint
+   - Default name is {table}_{column}_{check}
+#+BEGIN_SRC sql
+CREATE TABLE employees (
+ id serial PRIMARY KEY,
+ first_name VARCHAR (50),
+ last_name VARCHAR (50),
+ birth_date DATE CHECK (birth_date > '1900-01-01'),
+ joined_date DATE CHECK (joined_date > birth_date),
+ salary numeric CHECK(salary > 0)
+)
+#+END_SRC
