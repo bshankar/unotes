@@ -117,3 +117,29 @@ FULL [OUTER] JOIN B on A.id = B.id
    - INNER is default
 ** CROSS JOIN
    - Cartesian product of rows in each table
+
+* GROUP BY, HAVING
+  - used with aggregate functions like SUM, COUNT
+
+#+BEGIN_SRC sql
+SELECT column1, aggregate_function(column2)
+FROM table1
+GROUP BY column1
+HAVING condition
+#+END_SRC
+
+* Set operations
+** UNION
+    - Needs same # of columns, corresponding columns must have
+      compatible data types
+    - Removes duplicates unless UNION ALL is used
+
+** INTERSECT
+** EXCEPT
+   - Set operation A - B
+
+* Modifying Data
+
+* Managing tables
+
+* Constraints
