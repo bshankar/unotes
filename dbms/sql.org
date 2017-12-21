@@ -1,2 +1,119 @@
 #+TITLE: SQL Language
 
+* SELECT
+
+#+BEGIN_SRC sql
+-- SELECT column1, column2, ... FROM table
+SELECT first_name, last_name, email FROM customer
+SELECT * FROM customer  -- all columns
+#+END_SRC
+
+** SELECT DISTINCT
+   - Removes duplicate rows from the result
+   - Order of rows is unpredictable with select. So, especially with
+     DISTINCT ON, it is recommended to use ORDER BY
+
+#+BEGIN_SRC sql
+SELECT DISTINCT column1 FROM table1
+-- select distinct combinations of column1, column2, ...
+SELECT DISTINCT column1, column2, ... FROM table1
+-- postgresql supports distinct on
+SELECT DISTINCT ON (column1), column2, ... FROM table1 ORDER BY column1, column2
+#+END_SRC
+
+** ORDER BY
+   - sort by first_name in ascending order and then if some first_names
+     are equal, sort by last_name in descending order.
+
+#+BEGIN_SRC sql
+SELECT 
+  first_name, 
+  last_name 
+FROM 
+  customer 
+ORDER BY 
+  first_name ASC, 
+  last_name DESC
+#+END_SRC
+
+** WHERE
+   - = > < <= >= AND OR
+   - <> or != are used for not equal
+
+#+BEGIN_SRC sql
+SELECT column1, column2 ...
+FROM table1
+WHERE conditions
+#+END_SRC
+
+** LIMIT
+   - Return only n rows of the result after skipping the first m rows.
+
+#+BEGIN_SRC sql
+SELECT
+ *
+FROM
+ table1
+LIMIT n OFFSET m
+#+END_SRC
+
+** LIKE
+   - Used to search patterns. 
+   - % -> any sequence of characters
+   - _ -> any single character
+   - postgres has ILIKE which is case insensitive
+
+#+BEGIN_SRC sql
+SELECT
+ first_name,
+ last_name
+FROM
+ customer
+WHERE
+ first_name LIKE '%er%' AND 
+ last_name NOT LIKE '_ha%'
+#+END_SRC
+
+** IN
+
+#+BEGIN_SRC sql
+-- same for NOT IN
+value IN (value1,value2,...)
+value IN (SELECT value1 FROM table1)
+#+END_SRC
+
+** BETWEEN
+
+#+BEGIN_SRC sql
+-- or NOT BETWEEN
+VALUE BETWEEN low AND high
+#+END_SRC
+
+* JOINS
+  - [[https://stackoverflow.com/questions/3022713/difference-between-inner-join-full-join][Difference between Joins]]
+
+** INNER JOIN
+   - like intersection of 2 sets
+
+#+BEGIN_SRC sql
+SELECT * FROM A
+INNER JOIN B on A.id = B.id
+#+END_SRC
+
+** FULL [OUTER] JOIN
+   - Outer is optional
+   - Like union of 2 sets
+   - Can contain many nulls
+
+#+BEGIN_SRC sql
+SELECT * FROM A
+FULL [OUTER] JOIN B on A.id = B.id
+#+END_SRC
+
+** LEFT [OUTER] JOIN
+** RIGHT [OUTER] JOIN
+** NATURAL [INNER, LEFT, RIGHT] JOIN
+   - Implicit join based on column names
+   - INNER is default
+** CROSS JOIN
+   - Cartesian product of rows in each table
