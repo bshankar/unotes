@@ -138,9 +138,83 @@ HAVING condition
 ** EXCEPT
    - Set operation A - B
 
+* Subquery
+  - Query inside a query.
+
+#+BEGIN_SRC sql
+SELECT film_id, title, rental_rate
+FROM film
+WHERE rental_rate > (
+        SELECT AVG (rental_rate)
+        FROM film
+)
+#+END_SRC
+
+#+BEGIN_SRC sql
+SELECT film_id, title
+FROM film
+WHERE film_id IN (
+        SELECT inventory.film_id
+        FROM rental
+        INNER JOIN inventory ON inventory.inventory_id = rental.inventory_id
+        WHERE return_date BETWEEN '2005-05-29' AND '2005-05-30'
+)
+#+END_SRC
+
 * Modifying Data
+** INSERT
+#+BEGIN_SRC sql
+-- Works even without all columns 
+-- Rest are set to null
+INSERT INTO table (column1, column2, ...) 
+VALUES
+(value1, value2, ...)
+(value1, value2, ...)
+#+END_SRC
+
+** UPDATE
+#+BEGIN_SRC sql
+UPDATE table1
+SET column1 = value1,
+    column2 = value2 ,...
+WHERE
+ condition;
+
+-- Setting to a default value
+SET last_update = DEFAULT
+-- Setting to another column (maybe from another table)
+SET column1 = column2
+#+END_SRC
+
+** DELETE
+#+BEGIN_SRC sql
+DELETE FROM table1
+WHERE condition
+
+DELETE FROM table1
+USING table2
+WHERE table1.id = table2.id
+
+-- Same thing using subquery
+DELETE FROM table1
+WHERE table1.id = (SELECT id FROM table2)
+
+-- Delete all rows
+DELETE FROM table1
+#+END_SRC
+
+** UPSERT
+#+BEGIN_SRC sql
+INSERT INTO table1(column_list) VALUES(value_list)
+ON CONFLICT target action
+#+END_SRC
+
+  - target can be column_name, ON CONSTRAINT constraint_name, WHERE predicate
+  - action can be DO NOTHING, 
+    DO UPDATE SET column1 = value1, ... WHERE condition
 
 * Managing tables
+** 
 
 * Constraints
 ** PRIMARY KEY
