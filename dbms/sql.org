@@ -214,7 +214,10 @@ ON CONFLICT target action
     DO UPDATE SET column1 = value1, ... WHERE condition
 
 * Managing tables
-** 
+** CREATE TABLE
+** ALTER TABLE
+** RENAME TABLE
+** ADD/DROP/RENAME COLUMN
 
 * Constraints
 ** PRIMARY KEY
