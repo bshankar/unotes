@@ -18,7 +18,10 @@
    $J(\theta) = \frac{1}{2m} \sum_{i=1}^m (h_{\theta}(x^i) - y^i)^2$
 
 * Gradient descent
-  - Iterative algorithm to minimize the cost function J
+  - Iterative algorithm to
+
+     $\min \limits_\theta J(\theta)$
+
   - Repeat until convergence for j = 0 to n
   - (Update all values simultaneously)
 
@@ -27,3 +30,43 @@
   $\theta_j := \theta_j - \alpha
   \frac{1}{m}\sum_{i=1}^m(h_{\theta}(x^i) - y^i)\cdot x_j^i$
 
+** Feature scaling
+   - Gradient descent converges fast without many oscillations if all
+     the features have roughly the same range
+   - Descends quickly for small ranges, slowly for large ranges
+   - Rule of thumb (not mandatory)
+
+   $-1 \leq x_i \leq 1$
+
+** Mean normalization
+   - \mu_i is average of all values of feature i
+
+   $x_i := \frac{x_i - \mu_i}{s_i}$
+
+** Check Learning rate
+   - Choose \alpha = ..., 0.0001, 0.001, 0.01, ... , 1, ...
+   - Plot to see the convergence
+   - Automatic testing: if J decreased by < \epsilon in the next iteration
+   - Its hard to choose \epsilon automatically
+   - Convergence can be slow and you may not make progress on every iteration
+
+** If J is increasing
+   - Use smaller \alpha (but slows down the algorithm)
+
+* Normal equation
+  - Find a stationary point by solving for \theta_j
+
+    $\frac{\partial}{\partial \theta_j} J(\theta) = 0$ for all j
+
+  - Solve the linear equations!
+    
+    $\theta = (X^{T}X)^{-1} X^{T}Y$
+
+** Non-Invertiblity
+   - Too many features $m \leq n$: reduce features or use regularization
+   - Redundant/linearly dependent features
+
+* Polynomial Regression
+  - We can choose features Ex: h(length, breadth) can be modeled as h(area)
+  - Or we can choose higher order polynomials or any function of x_i that
+    might fit the data better while taking care of /feature scaling/.
