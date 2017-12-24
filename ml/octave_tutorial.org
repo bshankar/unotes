@@ -1,0 +1,167 @@
+#+TITLE: Octave tutorial
+
+* Basic operations
+
+#+BEGIN_SRC octave
+% try in the repl
+1 == 2
+1 ~= 2
+xor(1, 0)
+
+a = 3
+a = 4; % semicolon suppresses repl output
+a = pi
+disp(sprintf("%.2f", a))
+
+format long  % display more decimal places when printing
+format short
+
+A = [1 2; 3 4; 5 6] % you can put enters after ;
+V = 1:0.1:2  % [1 1.1 1.2 ... 2.0]
+V = 1:6  % [1 2 3 4 5 6]
+
+ones(2, 3)
+zeros(1, 3)
+rand(5, 8)
+w = 10 + sqrt(10)*randn(3, 3)
+hist(w, 50)  % 50 buckets
+
+I = eye(3, 3)  % identify matrix
+help eye
+#+END_SRC
+
+* Moving data around
+
+#+BEGIN_SRC octave
+A = zeros(5, 4)
+size(A)  % 5 4
+size(A, 1)  % 5
+size(A, 2)  % 4
+
+length(A)  % returns longest dim: 5
+
+pwd, cd, ls
+
+% loading a file
+load featuresX.dat
+load('featuresX.dat')
+
+who  % variables defined
+whos % more details
+clear variable
+V = priceY(1:10)
+save hello.mat v;
+save hello.txt v -ascii
+clear  % clear all variables
+
+A = [1 2; 3 4; 5 6]
+A(3, 2)  % answer is 6
+A(2,:)   % [3 4]
+A([1 3], :)  % 1 2; 5 6
+A(:, 2) = [10; 11; 12]
+A = [A, [100; 101; 102]]
+A(:)  % put all elements in a column vector
+C = [A B]
+C = [A; B]
+#+END_SRC
+
+* Computing with data
+#+BEGIN_SRC octave
+A*C  % matrix multiplication
+A.*C  % elementwise multiplication
+v + 1
+A'  % transpose
+[val, ind] = max(v)  % takes column wise max
+v < 3
+find(v < 3)
+a = magic(3)
+[r, c] = find(a >= 7)
+sum, prod, floor, ceil
+
+max(A, [], axis)  % default axis = 1
+filpup(eye(9))  % anti-diagonal
+
+pinv(A)  % pseudo-inverse
+#+END_SRC
+
+* Plotting
+#+BEGIN_SRC octave
+t = 0:0.01:0.98
+y = sin(4*pi*t)
+plot(t, Y)
+hold on
+plot(t, Y1, 'r')
+xlabel('time')
+ylabel('value')
+legend('sin', 'cos')
+title('my plot')
+print -dpng 'myplot.png'
+close
+
+figure(1); plot(t, Y)
+figure(2); plot(t, Y1)
+subplot(1, 2, 1)  % 1x2 grid, access 1st 
+plot...
+subplot(1, 2, 2)
+plot..
+axis([0.5 1 -1 1])
+clf
+
+imagesc(A)
+imagesc(A), colorbar, colormap(grey)
+a=1, b=2, c=3  % comma chaining commands
+#+END_SRC
+
+* Control statements
+#+BEGIN_SRC octave
+for i=1:10,
+  v(i) = 2^i
+end;
+
+% break continue
+
+i = 1;
+while i <= 5,
+  v(i) = 100;
+  i = i + 1;
+end;
+
+% inside a while
+if i == 6,
+  break;
+end;
+
+if ...,
+ ...;
+elseif ...,
+  ...;
+else
+  ...;
+end
+#+END_SRC
+
+- save function f1 as f1.m file
+inside the file
+
+#+BEGIN_SRC octave
+function y = f1(x)
+y = x^2
+#+END_SRC
+
+#+BEGIN_SRC octave
+% search path
+addPath(path)
+#+END_SRC
+
+#+BEGIN_SRC octave
+function [y1, y2] = f1(x)
+y1 = x^2
+y2 = x^3
+#+END_SRC
+
+* Vectorization
+  - vectorize the gradient descent!
+
+#+BEGIN_SRC octave
+theta' * x
+#+END_SRC
