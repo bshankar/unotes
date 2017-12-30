@@ -1,4 +1,5 @@
 #+TITLE: Multivariate Linear Regression
+#+latexpreview
 
 * Formulation
 
