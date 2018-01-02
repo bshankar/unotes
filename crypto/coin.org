@@ -1,0 +1,154 @@
+#+TITLE: How bitcoin works
+
+* Core ideas
+  - Digital signatures, cryptographic hashing.
+  - K_rX is the private key of X
+  - K_uX is the public key of X
+
+* Iterations
+** Letter of intent
+  - K_rA ("I Alice send Bob 1 coin")
+  - Bob/Others can duplicate this message
+
+** Serial Numbers
+   - A trusted source of serial numbers is needed (Bank)
+   - Bank provides Alice a serial number after deducting her balance
+     by 1
+   - K_rA ("I Alice send Bob 1 coin with serial # 123488")
+   - Bob contacts the bank and verifies
+     1. If # 123488 belongs to Alice
+     2. She hasn't spent it already
+   - Bob accepts and the # now belongs to Bob.
+
+** Make everyone the bank
+   - A shared public ledger (block chain) showing all coin transactions
+   - Bob can verify by himself with his copy of the block chain.
+   - Both Alice's message and Bob's acceptance message get broadcasted
+     to everyone and everyone updates their block chain.
+   - Alice can double spend! She can send the same coin to both Bob
+     and Charlie at almost the same time.
+   - Bob can ask everyone to update their block chains reducing the
+     window of time Alice has for double spending (Better but not
+     ideal). She could also do attacks to increase that time.
+
+   - So, Bob shouldn't verify by himself. He should broadcast and the
+     whole network should decide the transaction is legitimate.
+   - "Enough people should accept and say the coin is legitimate" ??
+
+** Proof of Work
+   - Alice can take over the network by making billions of bots which
+     say her coins are genuine allowing her to double spend
+
+   - Proof-of-Work
+     1. Artificially make it computationally costly to verify
+        transactions
+     2. Reward users for validating transactions
+
+   - Validation is influenced by amount of computational cost not
+     identities (impractical to cheat)
+
+   - A person verifying will have a queue of transactions checks his
+     copy of block chain and verifies that they are valid.
+   - Before broadcasting this news he must do a /hard computational
+     puzzle/: The proof-of-work.
+   - Let h be a cryptographic hash function (bitcoin uses SHA-256)
+   - Find a nonce such that:
+   - h(transaction_label + nonce) = n consecutive zeros + ...
+   - Can vary difficulty by varying n. On average one needs to try 16^n
+     values before getting the answer.
+
+   - Bitcoin gets better control over the difficulty by requiring
+     h(...) to be <= a target. So that it takes ~ 10min to validate.
+   - Randomness means it can take 1min or 20min or longer to
+     solve. Using multiple puzzles can reduce with variance.
+
+   - After finding x, he broadcasts the solution. Other uses verify
+     the validity of x and update their block chains. Reward!
+   - This is /mining/. Mining reward of bitcoins was 50 BTC. Halves
+     every 210,000 blocks (~ 4y). It halved once and reward is now 25
+     BTC + transaction fees. It halves until year 2140 at that point
+     reward will be < 10^{-8} (1 Satoshi or lowest unit)
+   - A dishonest miner has a small chance of corrupting the block chain.
+   - double spending ??
+
+** Time ordering
+   - To know who owns which coins
+   - New blocks have a pointer(hash of previous block) to the old block
+   - A fork can occur (rarely) for near simultaneous transactions
+
+*** Forks
+    - Network keeps track of both forks
+    - Miners only work to extend the longest fork in their block chain.
+    - In bitcoin, a transaction is not confirmed until it is
+      1. part of longest fork
+      2. At least 5 blocks follow it
+
+*** Double spending
+    - If Alice tries to double spend by putting both transactions in a
+      block. It is immediately spotted and rejected by others.
+    - If Alice sends some miners her transaction with Bob others
+      Charlie, only one gets through because of the strict time
+      ordering of blocks.
+
+    - Alice --> Charlie,  Alice --> Alice
+    - Alice waits for charlie to accept (6th block in the longest
+      chain) then tries to fork the chain before transaction with
+      Charlie. She is too far behind and no miner will help her
+      out. The probability of catching up is < 1/100^6. Unless her
+      mining rate >= all others.
+
+* Bitcoin
+** Bitcoin address
+   - Generate a pair of public and private keys.
+   - Hash the public key --> Bitcoin address
+   - 10min to generate private key, saves storage space
+
+   - Genesis block, coinbase transaction
+   - Malleability
+
+#+BEGIN_SRC json
+1.  {"hash":"7c4025...",
+2.  "ver":1,
+3.  "vin_sz":1,
+4.  "vout_sz":1,
+5.  "lock_time":0,
+6.  "size":224,
+7.  "in":[
+8.    {"prev_out":
+9.      {"hash":"2007ae...",
+10.      "n":0},
+11.    "scriptSig":"304502... 042b2d..."}],
+12. "out":[
+13.   {"value":"0.31900000",
+14.    "scriptPubKey":"OP_DUP OP_HASH160 a7db6f OP_EQUALVERIFY OP_CHECKSIG"}]}
+#+END_SRC
+
+#+BEGIN_SRC json
+{"hash":"993830...",
+2. "ver":1,
+3. "vin_sz":3,
+4.  "vout_sz":2,
+5.  "lock_time":0,
+6.  "size":552,
+7.  "in":[
+8.    {"prev_out":{
+9.      "hash":"3beabc...",
+10.        "n":0},
+11.     "scriptSig":"304402... 04c7d2..."},
+12.    {"prev_out":{
+13.        "hash":"fdae9b...",
+14.        "n":0},
+15.      "scriptSig":"304502... 026e15..."},
+16.    {"prev_out":{
+17.        "hash":"20c86b...",
+18.        "n":1},
+19.      "scriptSig":"304402... 038a52..."}],
+20.  "out":[
+21.    {"value":"0.01068000",
+22.      "scriptPubKey":"OP_DUP OP_HASH160 e8c306... OP_EQUALVERIFY OP_CHECKSIG"},
+23.    {"value":"4.00000000",
+24.      "scriptPubKey":"OP_DUP OP_HASH160 d644e3... OP_EQUALVERIFY OP_CHECKSIG"}]}
+#+END_SRC
+* Resources
+  - [[https://bitcoin.org/bitcoin.pdf][The original bitcoin paper]]
+  - [[http://www.michaelnielsen.org/ddi/how-the-bitcoin-protocol-actually-works/][How the bitcoin protocol actually works (blog)]]
