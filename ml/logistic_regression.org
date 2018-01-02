@@ -1,0 +1,72 @@
+#+TITLE: Logistic regression
+#+STARTUP: latexpreview
+
+* Classification Problem
+** Binary Classification
+
+   $y \in \{0, 1\}$
+
+** Multi class
+   
+   $y \in \{ 0, 1, 2, ... \}$
+
+** Threshold classifier
+   - An attempt at extending linear regression to this problem
+   - Using 
+
+       $h_{\theta}(x) = \theta^T X$
+
+   - if h >= 0.5 predict y = 1, 
+        h <  0.5 predict y = 0
+   
+   - *Bad* idea
+
+* Hypothesis
+  - is the sigmoid/logistic function
+
+  $h_{\theta}(x) = \frac{1}{1 + e^{-\theta^TX}}$
+
+  $h_{\theta}(x) = P(y=1 | x;\theta)$
+
+  - The input to the sigmoid function need not be linear. (Obviously!) 
+
+* Cost function
+  - Cost function used for linear regression is non-convex for the
+    Sigmoid function (with many local minima) due to non linearity.
+  - so gradient descent will not work on this cost function
+
+  - Better cost function
+
+   Cost(h, y) = - log(h)        if y = 1
+              = - log(1 - h)    if y = 0
+
+  - In summary
+
+   $J(\theta) = -\frac{1}{m} \sum y\log(h) + (1 - y)\log(1 - h)$
+
+* Advanced Optimization
+  - Other optimization functions include Conjugate gradient, BFGS, L-BFGS
+  - These don't need a manually picked alpha
+  - Faster than gradient descent
+  - But are more complex
+
+  - Using these in octave
+
+#+BEGIN_SRC octave
+function [jVal, gradient] = costFunction(theta)
+  jVal = [...code to compute J(theta)...];
+  gradient = [...code to compute derivative of J(theta)...];
+end
+
+options = optimset('GradObj', 'on', 'MaxIter', 100);
+initialTheta = zeros(2,1);
+   [optTheta, functionVal, exitFlag] = fminunc(@costFunction, initialTheta, options);
+#+END_SRC
+
+* Multiclass classification
+
+** One vs all/ One vs rest
+
+   $h_{\theta}^{(i)} = P(y = i | x;\theta)$
+
+   Choose $\max\limits_i (h_{\theta}^{(i)}(x))$

@@ -1,0 +1,51 @@
+#+TITLE: Overfitting and Regularization
+
+* Underfit or High bias
+  - Fitting a linear function when linear function doesn't model the
+    data properly.
+  - a Polynomial of degree 2 or 3 might be the ideal fit for this data
+
+* Overfit or High variance
+  - If we use a very high order polynomial >= 4 for example, we get a
+    crazy curve which goes up and down a lot that passes through all
+    the points but it is a bad model too.
+  - Caused by too many features.
+  - It can produce a very good fit with a very low or 0 J but will not
+    generalize to new examples well.
+  - Applies to both linear regression and logistic regression.
+
+* Addressing overfitting
+  - Plotting might help for small number of features
+
+** Option 1
+   - Manually select which features to keep
+   - Model selection algorithm
+
+** Options 2: Regularization
+   - Keeps all features but reduces magnitude of \theta_j
+   - Works well if all features contribute a little to the prediction.
+   - Smaller values of \theta: Less prone to overfitting, simpler hypothesis 
+
+* Regularized Problem
+
+  - Lambda is the regularization parameter
+  - We do not penalize \theta_0 by convention
+
+  $J = \frac{1}{2m} \left [ \sum\limits_{i=1}^m(h_{\theta}(x^{(i)}) - y^{(i)})^2 + \lambda \sum\limits_{j = 1}^n \theta_j^2
+  \right ]$
+
+  $\min\limits_{\theta}J(\theta)$
+
+* Gradient descent
+  - \lambda is 0 for \theta_0
+
+  $\theta_j := \theta_j\left (1-\alpha\frac{\lambda}{m} \right ) - \alpha\frac{1}{m}\sum_{i=1}^m(h_\theta(x^{(i)})-y^{(i)})x^{(i)}_j$
+
+* Normal equation
+
+  - $\lambda > 0$
+
+  $\theta = (X^T X + \lambda M)^{-1}X^Ty$
+
+  - Where M is like the identify matrix but first element is 0
+  - The matrix inside the inverse is always Invertible
