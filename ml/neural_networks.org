@@ -1,0 +1,68 @@
+#+TITLE: Neural Networks
+#+STARTUP: latexpreview
+
+* Motivation
+  Some problems require highly non-linear hypotheses. But we cannot use
+  linear/logistic regression because the number of features required
+  will be too high
+
+  - If we have 50x50 images to recognize cars
+  - And we include all quadratic terms: 2500^2/2 ~ 3 million features
+
+  - Inspired by the brain
+  - One learning algorithm hypothesis
+
+* Model representation
+
+#+BEGIN_SRC
+x0  \
+     \
+x1   ----> O --> h_theta(x)
+     /
+x2  /
+#+END_SRC
+
+  - If $h_{\theta}(x) = \frac{1}{1 + e^{-\theta^TX}}$ then it is a
+    Sigmoid activation function
+
+  - Theta is the parameters/ weights
+
+  - x0 is bias neuron = 1
+
+#+BEGIN_SRC
+x1   a1
+
+x2   a2  o  --> h_theta(x)
+
+x3   a3
+#+END_SRC
+
+  - Hidden layers, input layer, output layer
+
+  - each layer's neuron connects to all? neurons in its neighboring layers
+
+  - $a_i^{(j)}$ : activation of unit i in layer j
+
+  - $\Theta^{(j)}$ : matrix of weights controlling function mapping
+    from layer j to j + 1
+
+  - If network $s_j$ units in layer j and $s_{j + 1}$ in layer j + 1 then
+    $\Theta^{(j)}$ will have dimensions of $s_{j + 1} \times (s_j + 1)$
+
+  - Here's how to compute the hypothesis for the above neural network
+
+  \begin{align*}
+  a_1^{(2)} &= g(\Theta_{10}^{(1)}x_0 + \Theta_{11}^{(1)}x_1 + \Theta_{12}^{(1)}x_2 + \Theta_{13}^{(1)}x_3) \\
+  a_2^{(2)} &= g(\Theta_{20}^{(1)}x_0 + \Theta_{21}^{(1)}x_1 + \Theta_{22}^{(1)}x_2 + \Theta_{23}^{(1)}x_3) \\
+  a_3^{(2)} &= g(\Theta_{30}^{(1)}x_0 + \Theta_{31}^{(1)}x_1 + \Theta_{32}^{(1)}x_2 + \Theta_{33}^{(1)}x_3) \\
+  h_\Theta(x) &= a_1^{(3)} = g(\Theta_{10}^{(2)}a_0^{(2)} + \Theta_{11}^{(2)}a_1^{(2)} + \Theta_{12}^{(2)}a_2^{(2)} + \Theta_{13}^{(2)}a_3^{(2)})
+  \end{align*}
+
+  -  Forward propagation: Vectorized implementation
+
+  $h_{\theta}(x) = a^{(j + 1)} = g(\Theta^{(j)} a^{(j)})$
+
+  - the last 2 layers combined look like logistic regression but the
+    inputs to this logistic regression are some complicated non-linear
+    hypotheses.
+
