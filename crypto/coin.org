@@ -1,7 +1,7 @@
 #+TITLE: How bitcoin works
 
 * Core ideas
-  - Digital signatures, cryptographic hashing.
+  - Digital signatures, Cryptographic hashing.
   - K_rX is the private key of X
   - K_uX is the public key of X
 
