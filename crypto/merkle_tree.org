@@ -1,0 +1,49 @@
+#+TITLE: Merkle tree
+
+* Why
+  - proving integrity of data
+  - CPU and RAM/Disk efficient. Proofs are fast
+  - Less data to transfer for proof/management 
+
+  - Consistency, data verification and synchronization
+
+* Definition
+  - Tree in which
+    - leaves are labeled with hash of values
+    - non-leaves with hash of labels of children
+
+* Terminology
+  - Record/transaction/certificate: leaves in a Merkle tree
+  - Block: records are permanently recorded in files called blocks
+  - Log/Merkle tree
+
+* Proofs
+** Data verification/Audit proof
+   - You own record X and know the root hash
+   - Sends to server: Is the record X in the tree?
+   - Server sends a bunch of hashes [(h1, left), (h2, right), (h3, left), ...]
+   - h(h3 + h(h(h1 + X) + h2))... == root hash?
+
+** Consistency Proof
+   - Applies to 'append only' trees
+   - Assuming the bottom of the tree is at height 0 and increases upwards
+
+*** Rule 1
+    - Find the leftmost node at a height $n = \lfloor\log_2 m\rfloor$ from the bottom.
+    - k                 := 'number of leaves of this node'
+    - SN (sibling node) := sibling of the node acquired by Rule 1
+    - If m - k == 0, go to rule 3
+
+*** Rule 2
+    - If m - k == #(SN), return h(h(node_rule1) + h(SN)) as
+      this is the hash of the old root.
+    - If m - k < #(SN), SN := left_child(SN), repeat rule 2
+    - else, concatenate hash of SN, k += #(SN), SN := right_node(parent(SN))
+
+*** Rule 3
+    - Continue with the audit proof of the last node in the
+      consistency proof
+
+
+* Reference
+  - [[https://www.codeproject.com/Articles/1176140/WebControls/][Understanding merkle trees]]
