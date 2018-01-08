@@ -20,9 +20,11 @@
 * Proofs
 ** Data verification/Audit proof
    - You own record X and know the root hash
-   - Sends to server: Is the record X in the tree?
+   - Sends to server: Can you prove that the record X in the tree?
    - Server sends a bunch of hashes [(h1, left), (h2, right), (h3, left), ...]
    - h(h3 + h(h(h1 + X) + h2))... == root hash?
+   - Any system pretending to prove itself will fail as it can't
+     provide the intermediate hashes
 
 ** Consistency Proof
    - Applies to 'append only' trees
