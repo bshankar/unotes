@@ -1,7 +1,7 @@
 #+TITLE: Linear Algebra in machine learning
 
 Contains some resources to learn from.
-[[amitkaps.com][Website]]
+[[http://amitkaps.com][Website]]
 
 * Youtube 
   - 3 blue 1 brown: essence of linear algebra.
