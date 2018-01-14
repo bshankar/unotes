@@ -193,3 +193,39 @@ digraph neural_network {
      theta2 = reshape(thetaVec(111:220, 10, 11))
      theta3 = reshape(thetaVec(221:231, 1, 11))
      #+END_SRC
+
+** Gradient checking
+   - Numerically approximate the gradient and check if it is almost
+     equal to D. Then disable it before using
+     backpropagation. Otherwise it will be very /slow/.
+
+     $\dfrac{\partial}{\partial\Theta_j}J(\Theta) \approx \dfrac{J(\Theta_1, \dots, \Theta_j + \epsilon, \dots, \Theta_n) - J(\Theta_1, \dots, \Theta_j - \epsilon, \dots, \Theta_n)}{2\epsilon}$
+
+** Random initialization
+   - If we set $\Theta_{ij}^{(l)} = r$ for all i,j,l
+   - $a_1^{(2)} = a_2^{(2)}$, same with deltas and
+
+     $\frac{\partial}{\partial\Theta_{01}^{(1)}} J(\Theta) =
+     \frac{\partial}{\partial\Theta_{02}^{(1)}} J(\Theta)$ so all the
+
+     units in each inner layer keep computing the same parameter
+
+   - For symmetry breaking we set initial theta to a random value in $[-\epsilon, \epsilon]$
+
+* Putting it all together
+** Architecture
+  - Number of input units = dimension of features
+  - Number of output units = number of classes
+  - Number of hidden units/layer = More the better (but more = slow)
+  - Default: 1 hidden layer. If > 1, use same # of units in every
+    hidden layer
+
+** Training
+   - Randomly initialize the weights
+   - Implement forward propagation to get h for any x
+   - Implement the cost function
+   - Implement backpropagation to compute the partial derivatives
+   - Check backpropagation using gradient checking. Then /disable/ it.
+   - Use gradient descent/ built-in optimization function to minimize J.
+
+   - J is /not convex/. We can end up at a local minimum.
