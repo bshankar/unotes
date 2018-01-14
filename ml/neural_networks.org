@@ -127,3 +127,44 @@ digraph neural_network {
   - the last 2 layers combined look like logistic regression but the
     inputs to this logistic regression are some complicated non-linear
     hypotheses.
+
+* Cost function
+  - L is number of layers in network
+  - s_l is the number of units in layer l (excluding bias)
+  - s_L = K = 1 in binary classification problem
+  - K >= 3 in multiclass classification problem
+
+  $J(\Theta) = - \frac{1}{m} \sum_{i=1}^m \sum_{k=1}^K \left[y^{(i)}_k \log ((h_\Theta (x^{(i)}))_k) + (1 - y^{(i)}_k)\log (1 - (h_\Theta(x^{(i)}))_k)\right] + \frac{\lambda}{2m}\sum_{l=1}^{L-1} \sum_{i=1}^{s_l} \sum_{j=1}^{s_{l+1}} ( \Theta_{j,i}^{(l)})^2$
+
+* Backpropagation Algorithm
+
+** To be computed
+
+   - $J(\Theta)$
+
+   - $\frac{\partial}{\partial\Theta^l_{ij}}J(\Theta)$
+
+** Error
+
+   - no delta for layer 1
+
+   - $\delta_j^{(l)}$ = Error in node j in layer l.
+
+   - -$\delta_j^{(L)} = a_j^{(L)} - y_j$ and $a_j^{(L)} = h_{\theta}(x)_j$
+
+   - $\delta^{(l)} = (\Theta^{(l)})^T\delta^{(l + 1)}.*g'(z^{(l)})$
+
+   - $g'(z^{(l)}) = a^{(l)}.*(1 - a^{(l)})$
+
+** Gradient
+
+   - $\Delta^{(l)}_{i,j} := \Delta^{(l)}_{i,j} + a_j^{(l)}
+     \delta_i^{(l+1)}$
+
+   - Vectorized:  $\Delta^{(l)} := \Delta^{(l)} +
+     \delta^{(l+1)}(a^{(l)})^T$
+
+   - $D_{ij}^{(l)} = \frac{1}{m} \left ( \Delta_{ij}^{(l)} + \lambda
+     \Theta_{ij}^{(l)} \right )$ and $\lambda = 0$ for $j = 0$
+
+   - $\frac{\partial}{\partial\Theta^l_{ij}}J(\Theta) = D_{ij}^{(l)}$
