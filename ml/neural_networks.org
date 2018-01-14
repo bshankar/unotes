@@ -14,14 +14,35 @@
 
 * Model representation
 
-#+BEGIN_SRC
-x0  \
-     \
-x1   ----> O --> h_theta(x)
-     /
-x2  /
+#+BEGIN_SRC dot :file logistic_regression.png :cmdline -Kdot -Tpng
+digraph logistic_regression {
+  rankdir=LR
+  splines=line
+
+  node [fixedsize=true, label=""]
+  edge [arrowhead=none]
+
+  subgraph cluster_0 {
+		color=white
+		node [style=solid,color=blue4, shape=circle]
+		x1 x2 x3
+		label = "Input Layer"
+	}
+
+	subgraph cluster_1 {
+		color=white
+		node [style=solid,color=seagreen2, shape=circle]
+		O
+		label="Output Layer"
+	}
+  x1 -> O
+  x2 -> O
+  x3 -> O
+}
 #+END_SRC
 
+#+RESULTS:
+[[file:logistic_regression.png]]
   - If $h_{\theta}(x) = \frac{1}{1 + e^{-\theta^TX}}$ then it is a
     Sigmoid activation function
 
@@ -29,17 +50,58 @@ x2  /
 
   - x0 is bias neuron = 1
 
-#+BEGIN_SRC
-x1   a1
+#+BEGIN_SRC dot :file neural_network_example.png :cmdline -Kdot -Tpng
+digraph neural_network {
+  rankdir=LR
+  splines=line
 
-x2   a2  o  --> h_theta(x)
+  node [fixedsize=true, label=""]
+  edge [arrowhead=none]
 
-x3   a3
+  subgraph cluster_0 {
+		color=white
+		node [style=solid,color=blue4, shape=circle]
+		x1 x2 x3
+		label = "Input Layer (1)"
+	}
+
+  subgraph cluster_1 {
+    color=white
+    node [style=solid, color=coral, shape=circle]
+    a1 a2 a3
+    label = "Hidden Layer (2)"
+  }
+
+	subgraph cluster_2 {
+		color=white
+		node [style=solid,color=seagreen2, shape=circle]
+		O
+		label="Output Layer (3)"
+	}
+  x1 -> a1
+  x1 -> a2
+  x1 -> a3
+  x2 -> a1
+  x2 -> a2
+  x2 -> a3
+  x3 -> a1
+  x3 -> a2
+  x3 -> a3
+
+  a1 -> O
+  a2 -> O
+  a3 -> O
+}
 #+END_SRC
+
+#+RESULTS:
+[[file:neural_network_example.png]]
 
   - Hidden layers, input layer, output layer
 
   - each layer's neuron connects to all? neurons in its neighboring layers
+
+* Forward propagation
 
   - $a_i^{(j)}$ : activation of unit i in layer j
 
@@ -65,4 +127,3 @@ x3   a3
   - the last 2 layers combined look like logistic regression but the
     inputs to this logistic regression are some complicated non-linear
     hypotheses.
-
