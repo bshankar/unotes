@@ -1,0 +1,62 @@
+#+TITLE: Applying Machine Learning Algorithms
+
+Suppose you applied linear regression to predict housing prices but,
+the predictions are very inaccurate. What can you do?
+
+1. Get more training examples
+2. Try adding more/removing some features
+3. Add polynomial features
+4. Changing lambda
+
+* Machine learning diagnostic
+  - Can give insight where improvements can be made
+  - But, take time to implement (worth it!)
+
+* Evaluating a hypothesis
+  - Split the training set to
+    - 70% training set
+    - 30% test set
+
+  - M_test is the number of tests in test set. (randomly chosen)
+
+** Procedure
+   - Learn and minimize $J(\theta)$ from 70% of the data
+
+   - calculate $J_{test}(\theta)$
+
+   - Sometimes misclassification error/ 0/1 classification error is an
+     easier metric
+     error(h, y) = 1 if h >= 0.5, y = 0
+                     or h < 0.5, y = 1
+
+     $J_{test}(\theta) = \frac{1}{m} \sum err(h, y)$
+
+   - *The correct way* is to use
+     - 60% training set
+     - 20% cross validation set
+     - 20% test set
+
+   - Optimize J w.r.t the training set for each degree of polynomial (d)
+   - Find the d that has the least error w.r.t the validation set
+   - Estimate the generalization error using the test set
+
+* Bias vs Variance
+  - J ~ J_{cv} and both are high -->  high bias     (underfitting)
+  - J_{cv} >> J and J is very low --> high variance (overfitting)
+
+** Regularization effects
+   - Large lambda --> all thetas become almost zero. (underfit/high bias)
+   - 'Just right' lambda --> reasonable fit
+   - Very small lambda --> overfitting/high variance
+
+   - Create a list of lambdas Example: 0, 0.01, 0.02, 0.04, 0.08, ..., 10.24
+   - iterate through models, for each lambda
+   - Choose the best combo on cross validation set
+   - apply it to test set and see if it is good enough
+
+** Learning curves
+   - after training each example plot J for training and CV sets.
+   - If gap is too high --> overfitting/high variance
+   - if gap is low but both perform badly --> underfitting/low variance
+
+   - Overfitting can benefit from getting more training examples
