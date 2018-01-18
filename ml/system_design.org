@@ -46,4 +46,25 @@
 
       $R = \frac{tp}{ap} = \frac{tp}{tp + fn}$
 
+*** Trading off
+    - Predict y = 1 when h > threshold
+    - Depending on the application we can increase the threshold
+      increasing precision but lowering recall and v.v
+
+*** F score
+    - Comparing algorithms with different P, R.
+    - Avg doesn't work (Ex: predicting y = 1 always)
+
+    $F_1 = 2 \frac{PR}{P + R}$
+
 ** Large datasets
+   - Somebody said
+     "It's not the one who has the best algorithm that wins. Its who
+     has the most data". But is it true?
+*** Large data rationale
+    - Assume $x \in \rm I\!R^{n + 1}$ has sufficient information to predict
+      y accurately
+    - Test: Can a human expert predict y given x?
+
+    - Use Linear/Logistic regression with many features or a NN with many
+      hidden units and a very large training set together.
