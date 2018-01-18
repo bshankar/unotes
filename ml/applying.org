@@ -60,3 +60,29 @@ the predictions are very inaccurate. What can you do?
    - if gap is low but both perform badly --> underfitting/low variance
 
    - Overfitting can benefit from getting more training examples
+
+* Summary
+
+| Method                  | Fixes         |
+|-------------------------+---------------|
+| (+) training examples   | high variance |
+| (-) features            | high variance |
+| (+) features            | high bias     |
+| (+) polynomial features | high bias     |
+| decreasing lambda       | high bias     |
+| increasing lambda       | high variance |
+
+ - Get more training examples: fixes high variance
+  - Trying smaller set of features: fixes high variance
+  - adding features: fixes high bias
+  - adding p
+
+* Neural networks
+  - small NNs: fewer parameters, prone to underfitting, fast
+  - Large NNs: more parameters, prone to overfitting, slow. Use
+    regularization to address overfitting
+
+  - Large + regularization is is always better but computationally
+    more expensive
+
+  - 1, 2, 3 hidden layers and fit to CV set.
