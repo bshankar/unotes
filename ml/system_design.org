@@ -1,0 +1,49 @@
+#+TITLE: Machine Learning System design
+
+* Spam classifier
+** Modeling the problem
+   - Choose ~ 50k most frequently occurring words in the training set
+     as the features. The feature is 1 if the word exists in the email
+     otherwise 0
+
+     $X = [0 1 0 0 1 ...]^T$
+
+   - We can use logistic regression here. y = 1 (spam), y = 0 (not spam)
+
+** Ideas to improve accuracy
+   - Collect lots of data
+   - Develop sophisticated features (Ex: email header data)
+   - Process input in different ways (Ex: recognizing misspellings in
+     spam)
+
+   - /It is hard to say which option will be more helpful/
+
+** Error analysis
+*** Recommended Approach
+    - Implement a very simple algorithm quickly (in ~ 24h) and test it
+      on CV data.
+    - Plot learning curves and decide if
+      - (+) data?
+      - (+) features?
+      ...
+
+    - Error analysis: Manually check CV data that your algorithm made
+      errors on if you can spot any systematic trend
+
+** Skewed data
+   - /4 classes/: true positive, true negative, false positive, false negative
+   - Having high precision and recall -> high algorithm accuracy
+
+*** /Precision/
+    - of all patients which we predicted y = 1 actually have cancer?
+    - pp: predicted positives
+
+      $P = \frac{tp}{pp} = \frac{tp}{tp + fp}$
+
+***  /Recall/
+    - Of all the cancer patients what fraction have we predicted y = 1?
+    - ap: actual positives
+
+      $R = \frac{tp}{ap} = \frac{tp}{tp + fn}$
+
+** Large datasets
