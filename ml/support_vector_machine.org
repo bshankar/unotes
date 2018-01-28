@@ -1,0 +1,133 @@
+#+TITLE: Support Vector Machine
+#+STARTUP: latexpreview
+
+* Cost function
+  - In logistic regression, if y = 1 the cost becomes
+
+    $\log{\frac{1}{1 + e^{-\theta^T X}}}$ which is a function that
+
+    goes to 0 for large $z = \theta^T X$ and is negative values it
+    grows large.
+
+  - If we replace this function by 2 lines
+    - A straight line that is 0 at z = 1 and grows for negative z
+    - A flat y axis = 0 line for z > 1
+
+  - This new cost function, c_1(z) combined with its mirror
+    reflection (w.r.t y axis) for y = 0, c_0(z) closely resembles the cost
+    function of logistic regression with the added benefit of being
+    /computationally efficient/.
+
+  - With some convention changes the problem becomes
+
+    $\min\limit_{\theta} C \sum_{i = 1}^m \left [ y^{(i)} c_1(z) +
+    (1 - y^{(i)}) c_0(z) \right ] + \frac{1}{2}\sum_{j = 1}^n\theta_j^2$
+
+  - h = 1 if z >= 0
+    h = 0 otherwise
+
+  - C is like $\frac{1}{\lambda}$
+
+* Large margin
+  - SVM is a large margin classifier if C is very large
+  - It tries to fit a line that has a large empty margin on either
+    side before hitting training examples
+
+** Some intuition on Why
+   - Assume $\theta_0 = 0$ (decision boundary passes through origin) and that
+     there are only 2 features
+
+     $\min\limits_{\theta}\frac{1}{2}\sum_{j = 1}^{n}\theta_j^2 = \frac{1}{2}|\boldsymbol{\theta}|^2$
+
+   - Such that $\theta^T X^{(i)} \geq 1$ if $y^{(i)} = 1$
+
+     and $\theta^T X^{(i)} \leq -1$ if $y^{(i)} = 1$
+
+   - We know $\theta^T X^{(i)} = p^{(i)}|\boldsymbol{\theta}|$ where p
+     is the projection of X on theta.
+
+   - Theta vector is perpendicular to the decision boundary.
+
+   - We minimized norm of theta and it is now very small so the
+     projections must be large for the product to be large. This gives
+     rise to /large margin/.
+
+* Kernels
+
+  - $h = \theta_0 + \theta_1 f_1 + \theta_2 f_2 + ... +$ where f1, f2,
+
+    f3 ... are features.
+
+  - Is there a good way to choose relevant features to add (like
+    higher order polynomials ...)?
+
+  - $\theta_0 = -0.5$ We predict y = 1 when $h \geq 0$
+
+  - Suppose we have landmarks $l^{(i)}$. Using the Gaussian kernel,
+
+  - $f_1 = similarity(x, l^{(1)}) = \exp{\left (-\frac{||x -
+    l^{(1)}||^2}{2\sigma^2} \right )}$
+
+  - When a training example is close to a landmark, we predict y = 1
+    (according to above definition)
+
+** Choosing landmarks
+   - Choose one landmark at the location of each training example
+   - So we now have m landmarks = # of training examples.
+   - So, we get a feature vector of size m
+
+   - For training example $(x^{(i)}, y^{(i)})$ we compute
+
+     $[f_1 = sim(x, l^{(1)}), f_2 = sim(x, l^{(2)}), ..., f_m]$
+
+** SVM with kernels
+   - Given x, compute features $f \in \boldsymbol{R}^{m + 1}$ and
+     predict y = 1 if $\theta^Tf \geq 0$
+
+   - The training equation now uses f instead of x and n = m in the
+     new basis. So, $\theta \in \boldsymbol{R}^{m + 1}$
+
+** Optimizations
+   # Further research needed!
+   - An SVM library contains many mathematical optimizations
+   - One such is to calculate contribution of the regularization terms
+
+   - The value $\sum_{j = 1}^n\theta_j^2 = \theta^T\theta = ||\boldsymbol{\theta}||$ (without $\theta_0$)
+
+     is not calculated but $\theta^TM\theta$ is. It is a weighted/scaled
+     norm only to improve /computational efficiency/
+
+** Parameters
+
+   | parameter      | low                    | high                   |
+   |----------------+------------------------+------------------------|
+   | C (= 1/lambda) | high bias/low variance | low bias/high variance |
+   | sigma^2         | low bias/high variance | high bias/low variance |
+
+* Using an SVM
+  - Use an existing library!
+  - Specify C and kernel (similarity function)
+    - E.g. Linear kernel/ No kernel. Predict y = 1 if $\theta^TX \geq 0$
+    - We can do this when $n \gg m$
+    - Gaussian kernel: $n \ll m$
+
+  - You will need to implement the kernel function.
+  - Use /feature scaling/ before using Gaussian kernel
+
+  # ???
+  - Not all similarity functions are valid kernels. They need to
+    satisfy /Mercer's theorem/.
+
+  - Many packages have builtin multiclass classification but if not,
+    use one-vs-all method.
+
+  | Features (n) | Training examples (m) | Strategy                                                            |
+  |--------------+-----------------------+---------------------------------------------------------------------|
+  | 10000        | 10 to 10000           | Logistic regression or SVM without kernel                           |
+  | 1 to 1000    | 10 to 10000           | SVM with Gaussian kernel                                            |
+  | 1 to 1000    | > 50000               | Create more features, use Logistic regression or SVM without kernel |
+
+  - NN will likely work well in all these cases but training may be slower.
+
+  - SVM's cost function is convex so it'll always find the global
+    minimum. But a NN might converge to a local minimum.
