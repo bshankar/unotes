@@ -1,0 +1,121 @@
+#+TITLE: Creating Babel Plugins
+
+Babel is a static analysis tool (Analyze without running the code).
+
+* Stages
+** Parse
+*** Lexical Analysis
+    - string of code --> stream of tokens
+    - Tokens: flat array of objects
+*** Syntactic analysis
+    - stream of tokens --> AST
+
+** Transform
+   - Traverse, add, update, delete nodes
+   - Most complex part
+   - /Plugins operate here/
+
+** Generate
+   - final AST --> code string
+
+* Traversal
+  - Traverse the AST(nested object) recursively
+  - nodes of type identifier don't have child nodes
+
+* Visitors
+  - A pattern used in AST traversal
+  - Visitors are objects with methods defined for accepting particular
+    node types in a tree
+  - called on /enter/
+  - [[https://github.com/babel/babel/tree/master/packages/babel-types/src/definitions][Aliases for visitor nodes]]
+
+#+BEGIN_SRC javascript
+let visitor = {Identifier() {
+  // will be called when a node of type 'Identifier' is entered
+  console.log('called')
+}}
+
+visitor.memberExpression = function () {
+   ...
+}
+
+const MyVisitor = {
+  Identifier: {
+    enter() {
+      ...
+    },
+    exit() {
+      ...
+    }
+  }
+
+  // multiple visitor nodes
+  "MemberExpression|FunctionDeclaration" (...) {...}
+};
+
+#+END_SRC
+
+* Paths
+  - path is a reactive representation of a node's position, other
+    info about it, methods to add, update, remove, move nodes.
+** Paths in visitors
+   - Inside visitors we are actually visiting the path
+
+   #+BEGIN_SRC javascript
+   const MyVisitor = {
+     Identifier(path) {
+       console.log("Visiting: " + path.node.name);
+     }
+   };
+   #+END_SRC
+
+* State
+  - *NOPE*. Eliminate global state from visitors
+  - E.g. Put a visitor inside a visitor recursively to change something
+    inside something else instead of writing a visitor that changes
+    stuff over whole tree which is error prone.
+
+* Scopes
+  - Js uses lexical scoping
+  - Scope can be represented like this
+
+    #+BEGIN_SRC javascript
+    {
+      path: path,
+      block: path.node,
+      parentBlock: path.parent,
+      parent: parentScope,
+      bindings: [...]
+    }
+    #+END_SRC
+
+** Bindings
+   - is like variable assignment
+   - We can refer to that binding from the same/lower scope
+
+   #+BEGIN_SRC javascript
+   {
+     identifier: node,
+     scope: scope,
+     path: path,
+     kind: 'var',
+
+     referenced: true,
+     references: 3,
+     referencePaths: [path, path, path],
+
+     constant: false,
+     constantViolations: [path]
+   }
+   #+END_SRC
+
+   - We can know that the binding is constant/ find all references.
+   - We can use this info for E.g. minification
+
+* API
+
+* Example
+
+* Reference
+  - [[https://github.com/babel/babylon/blob/master/ast/spec.md][Babel AST spec]]
+  [[https://github.com/thejameskyle/babel-handbook/blob/master/translations/en/plugin-handbook.md#babel-plugin-handbook][- Babel Plugin Handbook]]
