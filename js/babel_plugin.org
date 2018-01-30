@@ -113,8 +113,103 @@ const MyVisitor = {
    - We can use this info for E.g. minification
 
 * API
+** babylon
+   - the parser
 
-* Example
+   #+BEGIN_SRC javascript
+   const ast = babylon.parse(code, {
+     sourceType: "module", // default is script
+     plugins: ["jsx"]  // default is []
+   });
+   #+END_SRC
+
+   - 'module' =sourceType= will parse in =strict mode= and allow strict
+     declarations, 'script' will not.
+   - 'script' will give errors if it finds =import= or =export=
+
+   - Enable [[https://github.com/babel/babylon/blob/master/README.md#plugins][internal plugins]] with =plugins= option
+
+** babel-traverse
+   #+BEGIN_SRC javascript
+   traverse(ast, {enter(path) {
+     ...
+   }})
+   #+END_SRC
+
+** babel-types
+   - utility library like lodash for building, validating and
+     converting AST nodes
+   - Contains definition of every single node type
+   - E.g.
+
+     #+BEGIN_SRC javascript
+     defineType("BinaryExpression", {
+       builder: ["operator", "left", "right"],
+       fields: {
+         operator: {
+           validate: assertValueType("string")
+         },
+         left: {
+           validate: assertNodeType("Expression")
+         },
+         right: {
+           validate: assertNodeType("Expression")
+         }
+       },
+       visitor: ["left", "right"],
+       aliases: ["Binary", "Expression"]
+     });
+     #+END_SRC
+
+*** Builder
+    - each node has a builder method which when used, it looks like
+      this =t.binaryExpression("*", t.identifier("a"), t.identifier("b"));=
+    - Also validate nodes they are creating and throw errors if used improperly.
+
+*** Validators
+    - =t.isBinaryExpression(..., {...})=
+    - =t.assertBinaryExpression(..., {...})= throws errors
+
+** Converters
+*** babel-generator
+    - AST -> source code
+
+    #+BEGIN_SRC javascript
+    import generate from 'babel-generator'
+    generate(ast, {...}, code)
+    #+END_SRC
+
+*** babel-template
+    - /Quasiquotes/: Strings of code with placeholders
+    - Can be used instead of ASTs
+
+    #+BEGIN_SRC javascript
+    const buildRequire = template(`
+    var IMPORT_NAME = require(SOURCE);
+    `);
+
+    const ast = buildRequire({
+      IMPORT_NAME: t.identifier("myModule"),
+      SOURCE: t.stringLiteral("my-module")
+    });
+    #+END_SRC
+
+* Transformation Operations
+* Plug-in Options
+* Best Practices
+  - Create helper builders, checkers
+  - Avoid traversing the AST as much as possible
+    - Merge visitors when possible
+    - Do not traverse when manual look up will do
+  - Optimizing nested visitors
+    - store the inner visitor in a variable and pass it each time
+    - A state can be passed to traverse and have access to it on
+      'this' in the visitor
+  - Being aware of nested structures
+  - Unit Testing
+    - Snapshot tests
+    - AST tests
+    - exec tests
 
 * Reference
   - [[https://github.com/babel/babylon/blob/master/ast/spec.md][Babel AST spec]]
