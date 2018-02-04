@@ -1,0 +1,90 @@
+#+TITLE: Principal component analysis
+
+* Motivation
+** Data compression
+   - Removing duplicate/highly correlated features (reducing dimensions)
+   - Visualization
+
+** Visualization
+   - Suppose we reduce n featured data (n Dimensions) to 2D or 3D
+   - We can plot it and visualize the data.
+
+* Formulation
+  - Before applying PCA, one must do feature scaling and mean
+    normalization.
+
+  - Find vectors $u^{(1)}, u^{(2)}, \ldots u^{(k)} \in
+    \boldsymbol{R}^n$ and project the data
+    onto the linear subspace spanned by these k vectors such that
+    we minimize squared projection error.
+
+  - PCA may find -u too. (Doesn't matter)
+
+  # Hmm
+  - PCA might look a bit like Linear Regression while plotting but
+    they're quite different (obviously)
+
+* Algorithm
+  # Too hard? Needs research
+  The mathematical proof of this algorithm has been skipped
+** Preprocessing
+   - Mean normalization: x --> x - mu
+   - Feature scaling: x - mu  --> (x - mu)/s
+
+** Finding u's
+   - Covariance matrix: $\Sigma = \frac{1}{m} \sum\limits_{i = 1}^n
+     (x^{(i)})(x^{(i)})^T = \frac{1}{m} X^T X$ (vectorized form)
+
+   - Compute eigenvectors of Sigma =[U, S, V] = svd(Sigma);=
+
+   - The columns of the U matrix are the U's we need. Take the first k
+     of them.
+
+   # Needs further research
+   - svd --> singular value decomposition, eig --> finds eigen vectors
+   - svd is numerically more stable and gives eigen vectors only for
+     covariance matrices because covariance matrix is a
+     /symmetric positive semi-definite/ matrix.
+
+** Projecting data
+   $Z = U_{k}^T X$ where U_k is matrix formed by first k columns of U.
+
+* Applying PCA
+** Reconstruction of original data
+   - We can get an approximation for x from z.
+
+   $X = U_{k} Z$
+
+** Choosing K (number of principal components)
+   - Typically choose K to be the smallest value such that
+
+   $V = \frac{\sum\limits_{i = 1}^m ||x^{(i)} -
+   x^{(i)}_{approx}||^2}{\sum\limits_{i = 1}^m ||x^{(i)}||^2} \leq 0.01$
+
+  - So that we retain 99% of the variance. We may choose to keep 90%
+    to 99% based on our requirements.
+
+  - We can try PCA for various values of K = 1, 2, ... , 17, ... and
+    choose 17 but that is quite inefficient.
+
+  - S is a diagonal square matrix from which we can compute V efficiently.
+
+    $V = 1 - \frac{\sum\limits_{i = 1}^k S_{ii}}{\sum\limits_{i = 1}^n S_{ii}}$
+
+** Supervised learning algorithm speedup
+   - A 100x100 image --> 10,000 features --> too slow
+   - Convert X --> Z with maybe 1000 features (only on the training set)
+   - Give (Z, y) to a supervised learning algorithm
+   - We can apply the same mapping to CV and test sets.
+
+** Advice
+   - To compress: Choose K based on the amount of variance you want
+   - To visualize: K = 2 or 3
+   - *DO NOT* use PCA to tackle overfitting even though it does reduce
+     the number of features. Use /regularization/ instead. Because, PCA
+     doesn't know about y and might throw away some useful information
+     unlike regularization.
+
+   - When starting a ML project, use the /raw data/ on the learning
+     algorithm. And only there's evidence that says x doesn't work or
+     will be too slow, then use PCA.
