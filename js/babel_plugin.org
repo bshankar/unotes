@@ -214,3 +214,6 @@ const MyVisitor = {
 * Reference
   - [[https://github.com/babel/babylon/blob/master/ast/spec.md][Babel AST spec]]
   [[https://github.com/thejameskyle/babel-handbook/blob/master/translations/en/plugin-handbook.md#babel-plugin-handbook][- Babel Plugin Handbook]]
+
+* Other
+  - Run =gulp build= after editing a package to regenerate the =lib/= folder.
