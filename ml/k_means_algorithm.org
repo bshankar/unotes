@@ -1,0 +1,60 @@
+#+TITLE: K-means algorithm
+
+Unsupervised learning algorithm to find clusters.
+
+* Uses
+  - Market segmentation
+  - Social network analysis
+  - Organize compute clusters
+  - Astronomical data analysis
+
+* Input
+   - K (number of clusters)
+
+   - Training set $\{x^{(1)}, x^{(2)}, \ldots, x^{(m)} \}$
+
+   - $x^{(i)} \in \boldsymbol{R}^n$ no more $x^{(0)} = 1$ convention
+
+* Algorithm
+  - Randomly initialize K cluster centroids $\mu_1, \mu_2, \ldots,
+    \mu_k \in \boldsymbol{R}^n$
+
+  #+BEGIN_SRC
+  Repeat {
+    # cluster assignment
+    for i = 1 to m
+      c^i = index of cluster centroid closest to x^i (1 to K)
+
+    for k = 1 to K
+       mu_k = avg mean of points assigned to cluster k
+  }
+  #+END_SRC
+
+  - Eliminate a cluster centroid with no cluster assigned to it or
+    reinitialize the cluster centroids randomly and try again.
+
+* Optimization objective
+
+  - Minimize J (cost function/ distortion)
+
+  $J = \frac{1}{m} \sum\limits_{i = 1}^m ||x^{(i)} - \mu_c^{(i)}||^2$
+
+  - In the cluster assignment step, we are minimizing J w.r.t the
+    current cluster centroids.
+  - In the move assignment step, we are minimizing J by moving the
+    current centroids w.r.t the current clusters.
+
+* Random initialization
+  - Randomly pick K training examples as the cluster centroids
+  - Local optima can happen so run K-means 50-1000 times and
+    choose the one with the best J especially when K is low (2 - 10).
+
+* Choosing number of clusters
+  - There's no right answer
+  - Best way is to choose manually
+  - Sometimes the purpose gives the value of K
+
+** Elbow method
+   - Plot K vs J and find K where an 'elbow' exists. (Where the slope
+     suddenly stops falling rapidly)
+   - You may not always find elbows.
