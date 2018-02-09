@@ -1,8 +1,4 @@
 * Definitions
-  - A [[file:functor.org][functor]] with the type signature
-
-    /M: A -> A/
-
   - An endofunctor with two natural transformations
 
   - At least mBind and mResult must be defined for a function to be a
@@ -11,6 +7,14 @@
 ** Monadic function
    - /lift/ function
    - E.g. f: T -> [T]
+
+** Type signature
+    #+BEGIN_SRC
+    class Applicative m => Monad (m :: * -> *) where
+     (>>=) :: m a -> (a -> m b) -> m b
+     (>>) :: m a -> m b -> m b
+     return :: a -> m a
+    #+END_SRC
 
 ** Monadic value
    - original value given to the monad
