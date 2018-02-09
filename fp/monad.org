@@ -1,0 +1,106 @@
+* Definitions
+  - A [[file:functor.org][functor]] with the type signature
+
+    /M: A -> A/
+
+  - An endofunctor with two natural transformations
+
+  - At least mBind and mResult must be defined for a function to be a
+    monad.
+
+** Monadic function
+   - /lift/ function
+   - E.g. f: T -> [T]
+
+** Monadic value
+   - original value given to the monad
+
+** mResult
+   - A function that does the lifting
+
+** arrayMonad
+   - arrayMonad is a monadic function/mBind/bind
+
+#+BEGIN_SRC javascript
+function arrayMonad(mv, mf) {
+    var result = []
+    mv.forEach(function(v) {
+        Array.prototype.push.apply(result, mf(v))
+    })
+    return result
+}
+
+arrayMonad.mResult = function(v) {
+    return [v]
+}
+
+function forEach2d(array1, array2, callback) {
+    return arrayMonad(array1, function(i) {
+        return arrayMonad(array2, function(j) {
+            return arrayMonad.mResult(callback(i,j))
+        })
+    })
+}
+#+END_SRC
+
+** Identify Monad
+
+#+BEGIN_SRC javascript
+function indentityMonad(mv, mf) {
+    return mf(mv)
+}
+
+identityMonad.mResult = function(v) {
+    return v
+}
+#+END_SRC
+
+** Maybe monad
+
+#+BEGIN_SRC javascript
+function mayBeMonad(mv, mf) {
+    return mv === null || mv === undefined || mv === false ? null : mf(mv)
+}
+
+mayBeMonad.mResult = function(v) {
+    return v
+}
+#+END_SRC
+
+* Monad laws
+  1. M(mResult(x), mf) = mf(x)
+  2. M(mv, mResult) = mv
+  3. M(M(mv, mf), mg)) = M(mv, function(x){return M(mf(x), mg)})
+
+* doMonad
+  - A monad that monadicFunction(mv, monadicFunction)
+
+#+BEGIN_SRC javascript
+function curry(fn, numArgs) {
+    numArgs = numArgs || fn.length
+    return function f(saved_args) {
+        return function() {
+            var args = saved_args.concat(Array.prototype.slice.call(arguments))
+            return args.length === numArgs ? fn.apply(null, args) : f(args)
+        }
+    }([])
+}
+
+function doMonad(monad, values, cb) {
+    function wrap(curriedCb, index) {
+        return function mf(v) {
+            return (index === values.length - 1) ?
+                monad.mResult(curriedCb(v)) :
+                monad(values[index + 1], wrap(curriedCb(v), index + 1))
+        }
+    }
+    return monad(values[0], wrap(curry(cb), 0))
+}
+doMonad(arrayMonad, [[1, 2], [3, 4]], function(x, y) {
+    return x + y
+})                           //==>> [ 4, 5, 5, 6 ]
+#+END_SRC
+
+
+* Reference
+  [[http://functionaljavascript.blogspot.in/2013/07/monads.html][Functional Javascript - Monads]]

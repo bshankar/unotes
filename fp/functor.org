@@ -1,0 +1,21 @@
+* Definitions
+  - Morphism is a structure preserving map between two algebraic structures.
+  - Functors are homomorphisms between categories
+
+  - homo (same) -morphism is a morphism between the same types.
+
+  - Functors preserve composition of functions (use this prove any F
+    is a functor)
+
+    $F(f \cdot g) = F(f) \cdot F(g)$
+
+* Examples
+  - map, filter
+  - maybe functor
+
+   # Needs further reading
+** Function functor
+
+* Type signature
+  - /F: A -> B/
+    (without affecting the composability)
