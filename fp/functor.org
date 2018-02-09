@@ -4,18 +4,21 @@
 
   - homo (same) -morphism is a morphism between the same types.
 
-  - Functors preserve composition of functions (use this prove any F
-    is a functor)
+** Laws
+   1. fmap id = id
 
-    $F(f \cdot g) = F(f) \cdot F(g)$
+   2. fmap (f . g) = fmap f . fmap g
 
 * Examples
-  - map, filter
+  - map
   - maybe functor
 
    # Needs further reading
 ** Function functor
 
 * Type signature
-  - /F: A -> B/
-    (without affecting the composability)
+  - fmap :: (a -> b) -> f a -> f b
+
+* Reference
+  1. [[http://functionaljavascript.blogspot.in/2013/07/functors.html][Functional Javascript - Functors]]
+  2. [[http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html][Functors, applicatives, monads in pictures]]
