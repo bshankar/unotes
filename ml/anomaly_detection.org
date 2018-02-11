@@ -1,0 +1,143 @@
+#+TITLE: Anomaly Detection
+#+STARTUP: latexpreview
+
+* Introduction
+  - Given a dataset $\{x^{(1)}, x^{(2)}, \cdots, x^{(m)}\}$ can we
+    determine if a new x is anomalous?
+
+  - We build a model P(x) such that if
+
+    P(x_test) < eps  -> flag it as anomalous otherwise OK.
+
+* Uses
+  - Aircraft engines
+  - Fraud detection: $x^{(i)}$ = features of user i's activities.
+  - Monitoring computers in a data center
+
+* Gaussian (Normal) distribution
+  - $x \in \boldsymbol{R}$. If x is distributed with mean $\mu$ and
+    variance $\sigma^2$ then,
+
+  - $\sigma$ is the standard deviation
+
+  - $x \sim \mathcal{N}(\mu, \sigma^2)$ (x is distributed as) and
+
+    $P(x; \mu, \sigma^2) = \frac{1}{\sqrt{2\pi}\sigma} \exp{\left
+    (-\frac{(x - \mu)^2}{2\sigma^2} \right )}$
+
+  - Gaussian distribution is a bell curve centered at the mean and
+    sigma is proportional to the width of the bell.
+
+  - Area under the bell curve is 1 as with all probability
+    distributions
+
+** Parameter distribution
+   - $\mu = \frac{1}{m}\sum\limits_{i = 1}^m x^{(i)}$ and $\sigma^2 =
+     \frac{1}{m}\sum\limits_{i=1}^m(x^{(i)} - \mu)^2$
+
+   # ???
+   - These formulas are /maximum likelyhood/.
+   - variance can have a denominator of 1/(m - 1) sometimes (rarely
+     used in ML.)
+
+* Algorithm
+  - P(x) = P(x1)P(x2) ... P(x_n)
+  - We assumed that the features were independent and it works well in
+    practice even if they are not so much.
+  - Assume each feature is distributed by its own Gaussian.
+
+    $P(x) = \prod_{j = 1}^n P(x_j; \mu_j, \sigma_j^2)$
+
+  - Given a new example, calculate p(x) and predict.
+
+* Building such systems
+** Evaluating
+   - Assume we have some labeled data for normal and non-anomalous
+     examples.
+   - Training set of size m. (almost all are not anomalous)
+   - CV and test sets have some anomalous examples.
+   - 10000 (normal/good) and 2-50 (anomalous)
+     Then, 6000 in training set, 2000 + 10 for CV, 2000 + 10 for test
+     set.
+
+*** Metrics
+    - Precision/Recall
+    - F1 score
+
+** Anomalous detection vs Supervised learning
+
+   | Anomaly Detection                           | Supervised Learning                |
+   |---------------------------------------------+------------------------------------|
+   | Very small number of +ve examples (0 - 20)  | Large number of both               |
+   | and Large number of -ve examples            |                                    |
+   |                                             |                                    |
+   | Many different types of anomalies possible  | Enough +ve examples to know what   |
+   | Future anomalies may look nothing like what | future positive examples look like |
+   | we saw so far                               |                                    |
+   |                                             |                                    |
+   | Fraud detection                             | Email spam                         |
+   | Manufacturing                               | Weather prediction                 |
+   | Monitoring machines in data center          | Cancer classification              |
+
+** Choosing features
+*** Transform features
+    - Plot features. If they don't look like a Gaussian, transform it
+      somehow using a mathematical function to a Gaussian.
+      E.g. log, power, constants etc.
+*** Choose
+   - We want p(x) to be large for normal examples,
+     low for anomalous examples.
+   - *Common problem:* But suppose they are large for both normal and
+     anomalous examples?
+     - Look at the data and come up with a new feature detects what
+       might have gone wrong.
+   - Choose features that might be unusually large or low during an
+     anomaly
+     - Memory used, disk accesses/s, CPU load, network traffic
+     - CPU load/network traffic
+* Multivariate Gaussian distribution
+  - The above sometimes misses a bigger view that all the normal cases
+    occur in a region. So an anomalous example which occurs far from
+    this region but has individual features within normal ranges will
+    /go undetected/.
+
+  - $\Sigma \in \boldsymbol{R}^{n\times n}$ and $\mu \in
+    \boldsymbol{R}^n$. We redefine p to
+
+    $p(x; \mu, \Sigma)
+    =\frac{1}{(2\pi)^{\frac{n}{2}} |\Sigma|^\frac{1}{2}}\exp{\left
+    (-\frac{1}{2}(x -\mu)^T\Sigma^{-1}(x - \mu) \right )}$
+
+  - Sigma is the [[file:principal_component_analysis.org][covariance matrix]].
+
+  - If mu is 0 matrix and Sigma is identity matrix. We get a n
+    dimensional bell centered at 0. If Sigma is 0.6*I the bump becomes
+    narrower and taller. and so on. We can change the diagonal
+    elements make the bell kind of elliptic.
+
+  - Off-diagonal elements indicate correlation among features. How
+    they grow with each other.
+
+  - Varying mu will change the location of the peak.
+
+  - Our original model fits to a special case of multivariate Gaussian
+    distribution where the contours of MVGD are axis aligned.
+    i.e the Sigma is a diagonal matrix.
+
+  - Linearly dependent features, small m can make Sigma non-invertible (rare)
+
+** When to use
+
+   | Original                    | Multivariate                       |
+   |-----------------------------+------------------------------------|
+   | More often                  | not so much                        |
+   |                             |                                    |
+   | Manually create features    | Automatically captures             |
+   | for usual combinations of   | correlations                       |
+   | values.                     |                                    |
+   |                             |                                    |
+   | Computationally cheaper for | Computationally more               |
+   | large n (10k, 100k ...)     | expensive                          |
+   |                             |                                    |
+   | OK even if m is small       | m > n else Sigma is non-invertible |
+   |                             | E.g. m >= 10n                      |
