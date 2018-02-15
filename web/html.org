@@ -131,4 +131,90 @@
    </a>
    #+END_SRC
 
-** Advanced text formatting
+* Advanced text formatting
+** Description lists
+   - =<dt>= description term, =<dd>= description definition
+   - dts are embolden and dds are a bit indented w.r.t dts.
+
+   #+BEGIN_SRC html
+   <dl>
+     <dt>soliloquy</dt>
+     <dd>In drama, where a character speaks to themselves, representing their inner thoughts or feelings and in the process relaying them to the audience (but not to other characters.)</dd>
+     <dt>monologue</dt>
+     <dd>In drama, where a character speaks their thoughts out loud to share them with the audience and any other characters present.</dd>
+     <dt>aside</dt>
+     <dd>In drama, where a character shares a comment only with the audience for humorous or dramatic effect. This is usually a feeling, thought, or piece of additional background information.</dd>
+   </dl>
+   #+END_SRC
+
+** Block quotes
+   - =<blockquote>= when a section is quoted from somewhere else and
+     cite the source's URL.
+
+     #+BEGIN_SRC html
+     <p>According to the <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blockquote">
+     <cite>MDN blockquote page</cite></a>:
+     </p>
+
+     <blockquote cite="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blockquote">
+     <p>The <strong>HTML <code>&lt;blockquote&gt;</code> Element</strong> (or <em>HTML Block
+     Quotation Element</em>) indicates that the enclosed text is an extended quotation.</p>
+     </blockquote>
+
+     <!-- Inline quotes -->
+     <p>The quote element — <code>&lt;q&gt;</code> — is <q cite="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/q">intended
+     for short quotations that don't require paragraph breaks.</q> -- <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/q">
+     <cite>MDN q page</cite></a>.</p>
+     #+END_SRC
+
+** Abbreviations
+   #+BEGIN_SRC html
+   <p>We use <abbr title="Hypertext Markup Language">HTML</abbr> to structure our web documents.</p>
+   #+END_SRC
+
+** Address
+   - Mark contact details of the author of the HTML document
+   #+BEGIN_SRC html
+   <address>
+       <p>Chris Mills, Manchester, The Grim North, UK</p>
+   </address>
+   #+END_SRC
+
+** Superscript and subscript
+   #+BEGIN_SRC html
+   <p>My birthday is on the 25<sup>th</sup> of May 2001.</p>
+   <p>Caffeine's chemical formula is C<sub>8</sub>H<sub>10</sub>N<sub>4</sub>O<sub>2</sub>.</p>
+   <p>If x<sup>2</sup> is 9, x must equal 3 or -3.</p>
+   #+END_SRC
+
+** Computer code
+   - <pre><code> could contain blocks of code
+
+   | tag    | purpose                        |
+   |--------+--------------------------------|
+   | <code> | Generic piece of computer code |
+   | <pre>  | Preserve original whitespaces  |
+   | <var>  | Variable names                 |
+   | <kbd>  | Keyboard/other input           |
+   | <samp> | Output of computer program     |
+** Date and time
+   - Attach an unambiguous, machine-readable time/date.
+
+   #+BEGIN_SRC html
+   <!-- Standard simple date -->
+   <time datetime="2016-01-20">20 January 2016</time>
+   <!-- Just year and month -->
+   <time datetime="2016-01">January 2016</time>
+   <!-- Just month and day -->
+   <time datetime="01-20">20 January</time>
+   <!-- Just time, hours and minutes -->
+   <time datetime="19:30">19:30</time>
+   <!-- You can do seconds and milliseconds too! -->
+   <time datetime="19:30:01.856">19:30:01.856</time>
+   <!-- Date and time -->
+   <time datetime="2016-01-20T19:30">7.30pm, 20 January 2016</time>
+   <!-- Date and time with timezone offset-->
+   <time datetime="2016-01-20T19:30+01:00">7.30pm, 20 January 2016 is 8.30pm in France</time>
+   <!-- Calling out a specific week number-->
+   <time datetime="2016-W04">The fourth week of 2016</time>
+   #+END_SRC
