@@ -1,0 +1,193 @@
+#+TITLE: Getting Started with Web development
+
+* Things needed
+  - Computer
+  - Text editor (Atom, VS code)
+  - Web browser
+  - Graphics editor (Gimp)
+  - Version control system (Git)
+  - Ftp program
+  - Automation system (Gulp, Grunt)
+
+* Planning
+  - Purpose? (why)
+  - What information will you show on the website?
+  - How will it look?
+
+* Design
+  - Sketch
+  - Choose assets (text (fonts), theme colors, images)
+    - In google images check 'labeled for reuse' to search images that
+      are not copyrighted.
+    - [[https://fonts.google.com][Google fonts]]
+
+* Files
+  - lowercase, no spaces in filenames, dashes are better than underscores
+    E.g. my_file.html and my-file.html (better) because google treats
+    hypen as word separator.
+
+  #+BEGIN_SRC
+  index.html
+  images/
+  styles/
+  scripts/
+  #+END_SRC
+
+  - You give the filename of image relative to the html file
+    E.g. =subdirectory/file.jpg= =../subdirectory/file.jpg=
+
+* HTML
+** HTML element
+   #+BEGIN_SRC html
+   <p class="editor-note"> My cat is very grumpy </p>
+   #+END_SRC
+
+   - Opening tag, content, closing tag
+   - attribute class inside the opening tag
+
+*** Empty elements
+    - contain no content, no closing tag.
+    #+BEGIN_SRC html
+    <img src="images/firefox-icon.png" alt="My test image">
+    #+END_SRC
+
+** HTML document
+   #+BEGIN_SRC html
+   <!DOCTYPE html>
+   <html>
+     <head>
+       <meta charset="utf-8">
+       <title>My test page</title>
+     </head>
+     <body>
+       <img src="images/firefox-icon.png" alt="My test image">
+     </body>
+   </html>
+   #+END_SRC
+
+   - =<!DOCTYPE html>= is a historical artifact. Optional
+   - =<html></html>= is the root element. Wraps around whole page
+   - =<head></head>= contains includes that do not appear to the viewers.
+   - =<body></body>= webpage contents that appear to users (text,
+     images, audio, games ...)
+
+   - ~<meta charset="utf-8">~ use UTF-8 encoding for text. Should be
+     added as it handles almost all human written languages.
+   - =<title></title>= sets the title of page, bookmark name.
+
+** Images
+   #+BEGIN_SRC html
+   <img src="images/firefox-icon.png" alt="My test image">
+   #+END_SRC
+
+   - alt is used for the visually impaired or when the image cannot load
+   - So, alt should contain a good description of the image.
+
+** Markup
+*** Text
+     - headers h1, h2, ... h6
+     - paragraphs p
+
+*** Lists
+    - =<ul>= unordered list, =<ol>= ordered list
+    - Each item inside will be in a =<li>= (list item) element.
+
+*** Links
+    #+BEGIN_SRC html
+    <a href="https://www.mozilla.org/en-US/about/manifesto/">Mozilla Manifesto</a>
+    #+END_SRC
+
+* CSS
+  #+BEGIN_SRC css
+  /* This is a comment */
+  p {
+    color: red;
+    width: 500px;
+    border: 1px solid black;
+  }
+
+  p, li, h1 {
+    color: red;
+  }
+  #+END_SRC
+
+  - p is the selector
+  - property: propertyValue is called declaration
+
+** Common selectors
+   | name                      | Example   |
+   |---------------------------+-----------|
+   | Element/tag/type selector | p         |
+   | id selector               | #my-id    |
+   | class selector            | .my-class |
+   | attribute selector        | img[src]  |
+   | pseudo-class selector     | a:hover   |
+
+** Fonts
+   - Using google fonts
+
+** Box model
+   - Most of the html elements are like boxes sitting on top of each other
+   - padding: space around the content
+   - border: solid line just outside padding
+   - margin: space around outside of an element
+
+   - width, background-color, color, text-shadow, display
+
+** Final CSS
+*** margin/padding
+    - auto: divide horizontal space equally between left and right
+    - one value: apply to all 4 sides
+    - two values: vertical, horizontal
+    - three values: top, horizontal, bottom
+    - four values: top, right, bottom, left
+
+*** display
+    - block: has the usual margin, border and padding
+    - inline: doesn't.
+
+  #+BEGIN_SRC css
+  html {
+    font-size: 10px;
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  h1 {
+    font-size: 60px;
+    text-align: center;
+  }
+
+  p, li {
+    font-size: 16px;
+    line-height: 2;
+    letter-spacing: 1px;
+  }
+
+  html {
+    background-color: #00539F;
+  }
+
+  body {
+    width: 600px;
+    margin: 0 auto;
+    background-color: #FF9500;
+    padding: 0 20px 20px 20px;
+    border: 5px solid black;
+  }
+
+  h1 {
+    margin: 0;
+    padding: 20px 0;
+    color: #00539F;
+    text-shadow: 3px 3px 1px black;
+  }
+
+  img {
+    display: block;
+    margin: 0 auto;
+  }
+  #+END_SRC
+
+* JavaScript
+  - put script tags at the bottom of HTML page. It cannot effect
+    things below it because of the load order.
