@@ -1,0 +1,29 @@
+#+TITLE: Predicting movie ratings
+#+STARTUP: latexpreview
+
+* Formulation
+  - $n_u$: number of users
+
+  - $n_m$: number of movies
+
+  - $r^{(i,j)} = 1$ if a user j has rated movie i
+
+  - $y^{(i,j)}$ is the rating given by user j to i only if $r^{(i,j)}
+    = 1$
+
+* Content based Recommendations
+  - Each movie can be represented by a feature vector containing
+    features like x_0 = 1, romance, action, ...
+
+  - We learn theta and predict the rating of user using a supervised
+    learning algorithm as $(\theta^{(j)})^T(x^{(i)})$. The problem becomes
+
+    $\min\limits_{\theta^{(j)}} \frac{1}{2m^{(j)}}
+    \sum\limits_{i:r(i,j) = 1} \left ((\theta^{(j)})^T (x^{(i)}) - y^{(i,j)}
+    \right )^2 + \frac{\lambda}{2m^{(j)}} \sum\limits_{k = 1}^n
+    \left (\theta_k^{(j)} \right )^2$
+
+  - Where $m^{(j)}$ is the number of movies rated by j. $\theta^{(j)} \in \boldsymbol{R}^{n + 1}$
+
+  - We can remove $m^{(j)}$. Then sum over all j to consider all
+    users and use *linear regression*.

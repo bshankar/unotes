@@ -1,0 +1,73 @@
+#+TITLE: Collaborative filtering
+#+STARTUP: latexpreview
+
+* Introduction
+  - Collaborative filtering has feature learning. It can learn what
+    features to use by itself.
+
+  - Suppose we know the ratings of users and the preferences of each
+    user. Can we calculate the features of each movie? i.e using theta
+    and y we need to compute x such that
+
+    $(\theta^{(j)})^T X^{(i)} \approx y^{(i,j)}$
+
+* Formulation
+
+  - Given $\theta^{(1)}, \theta^{(2)}, \ldots,\theta^{(n_u)}$ to learn $x^{(1)}, x^{(2)}, \ldots, x^{(n_m)}$
+
+    $\min\limits_{x^{(1)}, \ldots, x^{(n_m)}}
+    \frac{1}{2}\sum\limits_{i = 1}^{n_m}\sum\limits_{j:r^{(i,j)}=1} \left ((\theta^{(j)})^T (x^{(i)}) - y^{(i,j)}
+    \right )^2 + \frac{\lambda}{2} \sum\limits_{i=1}^{n_m}\sum\limits_{k = 1}^n
+    \left (\theta_k^{(j)} \right )^2$
+
+  - But we don't know both theta and X like the chicken and egg
+    problem. So we randomly initiate theta, get some ratings from
+    users then calculate x. From this x, improve theta ...
+
+    theta -> x -> theta -> x -> ...
+
+  - We sum the equations which find xs and thetas. We get
+
+    $\min\limit_{\theta x} J$ and J = 1/2 squared error over terms
+    with r = 1 + regularization terms for xs and thetas.
+
+
+  - We get rid of intercept term $x_0 = 1$ so now $x \in
+    \boldsymbol{R}^n$. If it really wants the algorithm itself will
+    learn such a feature if need arises.
+
+* Algorithm
+  - Initialize x, theta to small random values (like a NN)
+  - Minimize J using gradient descent or Advanced optimization algorithm.
+
+* Low rank matrix factorization
+  - Just another name of this algorithm
+
+  - If X is a matrix where each row contains features of
+    each movie, Theta is a matrix where each row contains thetas of a
+    user. Then,
+
+  - $X\Theta^T$ gives the matrix of predicted ratings. Where (i,j) ->
+    predicts rating of movie i by jth user.
+
+** Finding related movies
+  - For each movie i, we learn a feature vector $x^{(i)}$. We don't
+    understand what each of them are (like romance, action) but they
+    are some properties of the movie.
+
+  - Small $|| x^{(i)} - x^{(j)} ||$ means the movies are quite similar
+
+** Mean normalization
+   - Suppose a user has not rated any movies, regularization will make
+     his theta a 0 vector. But that predicts that this user will give
+     0 rating to all movies. *Not helpful!*
+
+   - Calculate mean rating of all movies. and mean normalize
+
+     $Y := Y - \mu$ and add back mean during prediction.
+
+   - So now we predict the mean rating for a user who didn't rate any movies.
+
+   - Sometimes we may need to average the columns to take care of
+     movies that were not rated. But its not as important. We can
+     ignore and not recommend this movie to anyone.
