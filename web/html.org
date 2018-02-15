@@ -34,10 +34,101 @@
    #+END_SRC
 
 ** Language of the document
-   - [[https://www.w3.org/International/articles/language-tags/][More languages]]
+   - [[https://www.w3.org/International/articles/language-tags/][More about languages]]
    #+BEGIN_SRC html
    <html lang="en-US">
    <p>Japanese example: <span lang="jp">ご飯が熱い。</span>.</p>
    #+END_SRC
 
-* Text fundamentals
+* Text
+** Structured hierarchy
+   - In a story
+     - h1 -> title of story
+     - h2 -> title of each chapter
+     - h3 -> subsections of each chapter ...
+
+   - A structuring should make sense.
+
+*** Best practices
+    - One h1 at the top of page and everything below this in hierarchy.
+    - Maintain order: E.g. do not use h3 for subheadings, h2 for
+      subsubheadings
+
+** Semantics
+   - it is important. so use actual headings though we can create some
+     things which look like headings
+
+     #+BEGIN_SRC html
+     <span style="font-size: 32px; margin: 21px 0;">Is this a top level heading?</span>
+     #+END_SRC
+
+   - Span has no semantic meaning. It is used to wrap content and
+     apply some CSS or Js to it.
+
+** Emphasis
+   - =<em>= makes inside italic, =<strong>= makes text bold. (by default)
+   #+BEGIN_SRC html
+   <p>I am <em>glad</em> you weren't <em>late</em>.</p>
+   <p>This liquid is <strong>highly toxic</strong>.</p>
+   #+END_SRC
+
+*** Italic, bold, underline
+    - /Presentation elements/ =<i>=, =<b>=, =<u>= were created to write styled text when css wasn't
+      supported.
+    - Do not use underlines as people associate them with hyperlinks.
+
+* Hyperlinks
+  - title is only visible on hover
+
+  #+BEGIN_SRC html
+  <p>I'm creating a link to
+  <a href="https://www.mozilla.org/en-US/"
+  title="The best place to find more information about Mozilla's
+  mission and how to contribute">the Mozilla homepage</a>.
+  </p>
+
+  <!-- Turning an image into a link -->
+  <a href="https://www.mozilla.org/en-US/">
+    <img src="mozilla-image.png" alt="mozilla logo that links to the mozilla homepage">
+  </a>
+  #+END_SRC
+
+** URLs and Paths
+   - Refer [[file:getting_started.org::24][Getting started #files]] (relative URLs)
+   - Absolute URLs
+   - Use clear wording. /NO/ `click here` and stuff.
+   - Use relative links wherever possible
+     (Shorter and no need of DNS look-ups)
+
+   - For non-html resources, leave clear sign posts
+   - Use download attribute for download links
+
+     #+BEGIN_SRC html
+     <p><a href="http://www.example.com/large-report.pdf">
+       Download the sales report (PDF, 10MB)
+     </a></p>
+
+     <p><a href="http://www.example.com/video-stream/">
+       Watch the video (stream opens in separate tab, HD quality)
+     </a></p>
+
+     <p><a href="http://www.example.com/car-game">
+       Play the car game (requires Flash)
+     </a></p>
+
+     <a href="https://download.mozilla.org/?product=firefox-39.0-SSL&os=win&lang=en-US"
+     download="firefox-39-installer.exe">
+     Download Firefox 39 for Windows
+     </a>
+     #+END_SRC
+
+** Email links
+   - The value of each field must be [[http://en.wikipedia.org/wiki/Percent-encoding][URL encoded]].
+
+   #+BEGIN_SRC html
+   <a href="mailto:nowhere@mozilla.org?cc=name2@rapidtables.com&bcc=name3@rapidtables.com&subject=The%20subject%20of%20the%20email&body=The%20body%20of%20the%20email">
+   Send mail with cc, bcc, subject and body
+   </a>
+   #+END_SRC
+
+** Advanced text formatting
