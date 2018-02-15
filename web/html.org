@@ -218,3 +218,52 @@
    <!-- Calling out a specific week number-->
    <time datetime="2016-W04">The fourth week of 2016</time>
    #+END_SRC
+* Structure
+  - Respect semantics and use right element for the right job
+** Basic sections
+   | tag       | meaning                     |
+   |-----------+-----------------------------|
+   | <header>  | header                      |
+   | <nav>     | navigation bar              |
+   | <main>    | main content                |
+   | <article> | article (inside main)       |
+   | <section> | section (inside main)       |
+   | <div>     | division (inside main)      |
+   | <aside>   | sidebar (often inside main) |
+   | <footer>  | footer                      |
+
+*** main
+    - For content unique to this page
+    - Once/page
+    - directly inside <body>
+    - Ideally not nested with other elements.
+
+*** article
+    - A block of related content that makes sense on its own.
+
+*** section
+    - Grouping together content with same functionality. E.g. minimap
+      or a set of article headings, summaries.
+    - We can arbitrarily nest articles and sections depending on the context.
+
+*** aside
+    - not directly related to main content
+    - glossaries, author, bio, links etc
+
+*** header
+    - Group of introductory content
+    - can be inside main, section etc
+
+*** nav
+    - Main navigation functionality of the page
+
+*** footer
+    - end content of the page
+
+** Non-semantic wrappers
+   - <span> is inline, <div> is block level
+   - Keep their usage to minimum.
+
+** Line breaks and horizontal rules
+   - =<br>= is the line break
+   - =<hr>= draws a horizontal line
