@@ -267,3 +267,81 @@
 ** Line breaks and horizontal rules
    - =<br>= is the line break
    - =<hr>= draws a horizontal line
+* Planning
+  - Draw a sitemap: A graph with each node containing title, functionality,
+    content and the edges pointing to other nodes.
+* Debugging
+** Permissive code
+   - A piece of code can have syntax errors, logic errors (bugs)
+   - HTML is very /permissive/. Browsers have rules to interpret
+     incorrect HTML and show even if the result is not what was
+     intended. So, /no syntax errors/.
+
+** Validation
+   [[https://validator.w3.org/][Markup validation service]]
+* Multimedia
+** Images
+   - Elements like =<img>= and =<video>= are replaced elements
+   - No hotlinking
+   - No putting copyright images
+
+*** Alternate text
+    #+BEGIN_SRC html
+    <!-- Using alternate text -->
+    <img src="images/dinosaur.jpg"
+      alt="The head and torso of a dinosaur skeleton;
+           it has a large head with long sharp teeth">
+    #+END_SRC
+
+**** Guidelines
+
+     | Purpose of image | Alternate text                                                |
+     |------------------+---------------------------------------------------------------|
+     | Decoration       | "" (ideally it should be a css background image)              |
+     | Content          | Describe the image but no redundancies                        |
+     | link             | provide accessible link text inside <a> or <img alt="..."     |
+     | text             | No text in images! but if its unavoidable put its text in alt |
+*** Width and height
+    - Find and set the image width and height
+    - Prevents reflows
+    - *Do not* alter image size using these attributes
+    - Use CSS instead
+
+*** Title
+    - Creates a tooltip
+    - Not essential
+
+    #+BEGIN_SRC html
+    <img src="images/dinosaur.jpg"
+     alt="The head and torso of a dinosaur skeleton;
+          it has a large head with long sharp teeth"
+     width="400"
+     height="341"
+     title="A t-rex smoking cardboard">
+    #+END_SRC
+
+*** Figure
+    - Figure is a compact, easy to grasp block that provides essential
+      info supporting main text
+    - A figure can be image, code snippet, audio, video, equations, table etc
+
+    #+BEGIN_SRC html
+    <figure>
+      <img src="images/dinosaur.jpg"
+           alt="The head and torso of a dinosaur skeleton;
+                it has a large head with long sharp teeth"
+           width="400"
+           height="341">
+
+      <figcaption>A T-Rex on display in the Manchester University Museum.</figcaption>
+    </figure>
+    #+END_SRC
+
+*** CSS background images
+    - Purely for decoration
+
+    #+BEGIN_SRC html
+    p {
+        background-image: url("images/dinosaur.jpg");
+    }
+    #+END_SRC
