@@ -443,3 +443,70 @@
        <p>You don't have a PDF plugin, but you can <a href="myfile.pdf">download the PDF file.</a></p>
    </object>
    #+END_SRC
+
+* Vector graphics
+** SVG
+   - XML based and contains elements for creating shapes, transforms,
+     masks, animate etc.
+   - Zoom-in indefinitely, smaller size, text is visible to SEO, easy
+     to tweak/script/style like code.
+   - Also get complicated quickly, harder to create, older browsers
+     don't support it. So, use raster images for photos.
+   - [[http://tavmjong.free.fr/INKSCAPE/MANUAL/html/Web-Inkscape.html][Preparing SVG for the web]]
+
+   #+BEGIN_SRC xml
+   <svg version="1.1"
+     baseProfile="full"
+     width="300" height="200"
+     xmlns="http://www.w3.org/2000/svg">
+     <rect width="100%" height="100%" fill="black" />
+     <circle cx="150" cy="100" r="90" fill="blue" />
+   </svg>
+   #+END_SRC
+
+** Adding SVG to pages
+*** img
+    - familiar, can make it a hyperlink
+    - Cannot manipulate with js, non-inline CSS, no pseudoclass styling
+
+    #+BEGIN_SRC html
+    <img
+        src="equilateral.svg"
+        alt="triangle with all three sides equal"
+        height="87px"
+        width="100px" />
+
+    <!-- Handling Legacy stuff -->
+    <img src="equilateral.png" alt="triangle with equal sides" srcset="equilateral.svg">
+
+    background: url("fallback.png") no-repeat center;
+    background-image: url("image.svg");
+    background-size: contain;
+    #+END_SRC
+
+*** svg tag
+    - Saves http request, assign classes, ids, SVG presentation
+      attribute etc, hyperlinks, pseudoclasses
+
+    - duplication, increases HTML size, not cached with other images,
+      write <foreignobject> for old browsers.
+
+    #+BEGIN_SRC html
+    <svg width="300" height="200">
+        <rect width="100%" height="100%" fill="green" />
+    </svg>
+    #+END_SRC
+
+*** iframe
+    - not a good method
+    - cannot use page's js to manipulate what's inside iframe
+
+    #+BEGIN_SRC html
+    <iframe src="triangle.svg" width="500" height="500" sandbox>
+        <img src="triangle.png" alt="Triangle with three unequal sides" />
+    </iframe>
+    #+END_SRC
+
+* Responsive Images
+* Tables
+* Forms
