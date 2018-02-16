@@ -345,3 +345,101 @@
         background-image: url("images/dinosaur.jpg");
     }
     #+END_SRC
+
+** Video
+   - Use online video providers (OVPs) if possible as the bandwidth
+     needs are very high.
+
+*** Formats
+    - MP3, MP4, WebM are container formats
+    - They contain parts like audio track, video track, metadata.
+      - WebM is usually Ogg Vorbis audio + VP8/VP9 video (FFx + Chrome)
+      - MP4 is often AAC or MP3 audio + H.264 video (IE, Safari)
+      - Ogg (older) had Vorbis audio + Ogg Theora video
+
+    - [[https://developer.mozilla.org/en-US/docs/Web/HTML/Supported_media_formats#Browser_compatibility][Audio, Video compatibility table]]
+
+    - You can set =preload= to ="none"=, ="auto"= and ="metadata"=.
+
+    #+BEGIN_SRC html
+    <video controls width="400" height="400"
+        autoplay loop muted
+        poster="poster.png">
+        <source src="rabbit320.mp4" type="video/mp4">
+        <source src="rabbit320.webm" type="video/webm">
+        <p>Your browser doesn't support HTML5 video. Here is a <a href="rabbit320.mp4">link to the video</a> instead.</p>
+    </video>
+    #+END_SRC
+
+** Audio
+   - Same except it lacks visual attributes like poster.
+
+** Text tracks
+   - Subtitles, captions, timed descriptions
+   - Captions: synchronized transcriptions of dialog or significant
+     sounds when people can't hear understand.
+   - timed descriptions: For visually impaired
+
+   #+BEGIN_SRC
+   WEBVTT
+
+   1
+   00:00:22.230 --> 00:00:24.606
+   This is the first subtitle.
+
+   2
+   00:00:30.739 --> 00:00:34.074
+   This is the second.
+
+   ...
+   #+END_SRC
+
+   #+BEGIN_SRC html
+   <video controls>
+       <source src="example.mp4" type="video/mp4">
+       <source src="example.webm" type="video/webm">
+       <track kind="subtitles" src="subtitles_en.vtt" srclang="en">
+   </video>
+   #+END_SRC
+* Embedding anything
+** Iframes
+   - Allow you to embed other web documents into the current.
+   - E.g. Videos, comment systems, maps, ad banners
+
+   #+BEGIN_SRC html
+   <iframe src="https://developer.mozilla.org/en-US/docs/Glossary"
+           width="100%" height="500" frameborder="0"
+           allowfullscreen sandbox>
+     <p> <a href="https://developer.mozilla.org/en-US/docs/Glossary">
+       Fallback link for browsers that don't support iframes
+     </a> </p>
+   </iframe>
+   #+END_SRC
+
+   - *Speed tip:* set the src of an iframe after the page has loaded
+     using js.
+
+*** [[https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Other_embedding_technologies#Security_concerns][Security concerns]]
+    - Use carefully as it is a common /attack vector/ for hackers.
+      - [[https://en.wikipedia.org/wiki/Clickjacking][Clickjacking]]
+      - [[https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Other_embedding_technologies#Configure_CSP_directives][Configure CSP directives]]
+      - Use https: Let's encrypt
+      - Sandbox
+
+** Embed and Object
+   - Used to embed multiple types of external content like plugin
+     based technologies, images, videos and SVG.
+   - [[https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Other_embedding_technologies#The_case_against_plugins][The case against plugins]]
+
+   #+BEGIN_SRC html
+   <embed src="whoosh.swf" quality="medium"
+       bgcolor="#ffffff" width="550" height="400"
+       name="whoosh" align="middle" allowScriptAccess="sameDomain"
+       allowFullScreen="false" type="application/x-shockwave-flash"
+       pluginspage="http://www.macromedia.com/go/getflashplayer">
+
+   <object data="mypdf.pdf" type="application/pdf"
+       width="800" height="1200" typemustmatch>
+       <p>You don't have a PDF plugin, but you can <a href="myfile.pdf">download the PDF file.</a></p>
+   </object>
+   #+END_SRC
