@@ -78,5 +78,42 @@
   #+END_SRC
 
 * Online learning
+** Shipping service
+   - Given origin, destination you offer to ship for some asking price
+     and users choose to use it (y = 1) or not (y = 0)
+   - Features x capture properties of user, origin, destination and
+     asking price. We want to learn p(y = 1|x, theta) to optimize price.
+   - We can use Logistic regression, or NN.
+   - Can adapt to changing user preferences
 
-* Map, reduce, Parallelism
+   #+BEGIN_SRC
+   Repeat forever {
+       GET (x, y) from a user
+       Update theta using (x, y):
+          theta_j = theta_j - alpha * (h(x) - y) x_j for j = 0 to n
+   }
+   #+END_SRC
+
+** Product search
+   - User searches "Android phone 1080p camera"
+   - Store has 100 phones, return 10 phones.
+   - x: how many words match with name of phone, description of phone ...
+   - y = 1 if user clicks on the phone, y = 0 otherwise
+   - Learn p(y = 1|x;theta). Predicted CTR (Click through rate)
+
+   - Special offers, news articles, product recommendation
+
+* Map-reduce, Parallelism
+  - Suppose we have a dataset with m = 400 million and we want to run
+    batch gradient descent on it
+  - Split the training set into n equal parts of size k = 400M/n and
+    send it to n machines
+  - Compute the sum of k terms on each machine while upgrading thetas
+    in gradient descent.
+  - Send the sums to a master server and calculate the total sum and
+    divide by 400M.
+
+  - Potentially we can get n times faster results
+  - We can do this on multiple cores of a computers. Some
+    libraries do it automatically too. Good vectorization is required.
+    E.g. Hadoop
