@@ -1,0 +1,82 @@
+#+TITLE: Dealing with Large datasets
+
+* Introduction
+  - One with the most data wins not the one who has the best algorithm
+  - A typical m could be 100 million
+    - In each step of gradient descent we need to sum 100 million
+      examples! (too slow)
+    - Check if m = 1000 works just as well. If the variance is low
+      then m = 1000 will likely work.
+
+* Stochastic Gradient Descent
+  - Batch gradient descent is what we normally use.
+  - We will use [[file:linear_regression.org::21][linear regression]] as the example.
+
+** Alternate view of cost
+    $cost(\theta, (x^{(i)}, y^{(i)})) =
+    \frac{1}{2}(h_{\theta}(x^{(i)}) - y^{(i)})^2$
+
+    $J_{train}(\theta) = \frac{1}{m}\sum\limits_{i = 1}^m cost(\theta, (x^{(i)}, y^{(i)}))$
+
+** Algorithm
+   #+BEGIN_SRC
+   randomly shuffle training examples
+
+   Repeat 1-10x {
+     for i = 1 to m {
+         for (j = 0 to n)
+             theta_j = theta_j - alpha * partial(cost(i), theta_j)
+     }
+   }
+   #+END_SRC
+
+   - where $\frac{\partial}{\partial \theta_j} cost(\theta,
+     (x^{(i)},y^{(i)})) = (h_{\theta}(x^{(i)}) - y^{(i)})x^{(i)}_j$
+
+** Behavior
+  - Every iteration just tries to fit one example better
+  - It wanders around in a random way but winds up close to the global minimum.
+
+** Convergence
+   - tuning alpha, making sure it is converging
+*** Batch gradient descent
+    - plot J vs # of iterations and make sure it is decreasing every
+      iteration
+*** Stochastic
+    - Check cost(i) before and after updating theta.
+    - Every 1000 examples (say), plot cost(i) averaged over last
+      1000 examples processed by the algorithm
+    - Plot will be noisy but if it has reduced then good
+      - Smaller alpha: might be better, less oscillations
+      - Too much noise: average over 5000 examples then we might see
+        some decrease in J
+      - increasing J: diverging, use smaller alpha
+
+**** Helping the convergence
+     - Slowly reduce alpha over time to make it converge to global minimum.
+     - But needs two new parameters.
+
+     $\alpha = \frac{C_1}{iter + C_2}$
+
+* Mini-Batch Gradient Descent
+  - While calculating partial derivatives
+    - in batch gradient descent, we summed over all m examples
+    - in stochastic gradient descent, we summed over 1 example
+    - in mini-batch, we sum over b examples (b is the mini batch size)
+      - We choose b = 2 to 100
+
+  - Can help vectorization. Calculate and sum b elements in parallel.
+
+  #+BEGIN_SRC
+  say b = 10, m = 1000
+  Repeat {
+    for i = 1, 11, 21, 31, ..., 991 {
+       for j = 0 to n
+           theta_j = theta_j - alpha * 1/10 * sum((h(x_k) - y_k)x^k_j, k, i, i + 9)
+    }
+  }
+  #+END_SRC
+
+* Online learning
+
+* Map, reduce, Parallelism
