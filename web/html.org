@@ -535,5 +535,71 @@
    }
    #+END_SRC
 
+** Art direction
+   - Show different images to suit different sizes
+   - picture element is like audio or video tag.
+   - Use media attribute only in art direction. No media contributions
+     in sizes attribute.
+
+   #+BEGIN_SRC html
+   <picture>
+       <source media="(max-width: 799px)" srcset="elva-480w-close-portrait.jpg">
+       <source media="(min-width: 800px)" srcset="elva-800w.jpg">
+       <img src="elva-800w.jpg" alt="Chris standing up holding his daughter Elva">
+   </picture>
+   #+END_SRC
+
+** Why not use just CSS or JS
+   - browser preloads images while a page is loading before CSS and JS
+     are loaded and interpreted. 20% savings!
+   - We need srcset because by the time you know the size of <img> you
+     will have already loaded a bigger image.
+
+** Newer image formats
+   - New formats with low size: webp, jpeg-2000
+
+   #+BEGIN_SRC html
+   <picture>
+       <source type="image/svg+xml" srcset="pyramid.svg">
+       <source type="image/webp" srcset="pyramid.webp">
+       <img src="pyramid.png" alt="regular pyramid built from four equilateral triangles">
+  </picture>
+   #+END_SRC
+
 * Tables
+  - Do not use tables for laying out a website. (Use CSS techniques!)
+  - tables reduce accessiblity, produce tag soup, not automatically responsive.
+  - <table>, <th>, <tr>, <td> tags
+** Allowing a cell to span multiple rows and columns
+   - use the attributes rowspan and colspan
+   #+BEGIN_SRC html
+   ...
+   <td colspan="2"> Horse </td>
+   ...
+   #+END_SRC
+
+** Common styling to columns
+   - <col> and <colgroup> elements
+
+   #+BEGIN_SRC html
+   <table>
+     <colgroup>
+       <col>
+       <col style="background-color: yellow">
+     </colgroup>
+     <tr>
+       <th>Data 1</th>
+       <th>Data 2</th>
+     </tr>
+     <tr>
+       <td>Calcutta</td>
+       <td>Orange</td>
+     </tr>
+     <tr>
+       <td>Robots</td>
+       <td>Jazz</td>
+     </tr>
+   </table>
+   #+END_SRC
+
 * Forms
