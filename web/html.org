@@ -602,4 +602,57 @@
    </table>
    #+END_SRC
 
+** Caption
+   - Caption contains a description of the table contents
+   #+BEGIN_SRC html
+   <table>
+       <caption> Dinosaurs in the jurassic perios </caption>
+   ...
+   </table>
+   #+END_SRC
+
+** Adding structure
+   - these tags are useful for layout and styling
+*** <thead>
+    - needs to wrap the part of the table that is the header
+*** <tfoot>
+    - needs to wrap around the footer of the table. maybe last row or
+      last few rows.
+*** <tbody>
+    - needs to wrap content in parts of the table that aren't in table
+      header or footer.
+    - It is implicitly present in every table. (Inspect element to
+      find out!)
+
+** Nesting tables
+   - possible
+
+** Visually impaired users
+   - add column and row headers
+   - scope attribute
+     # #+BEGIN_SRC html
+     <thead>
+       <tr>
+         <th scope="col">Purchase</th>
+         <th scope="col">Location</th>
+         <th scope="col">Date</th>
+         <th scope="col">Evaluation</th>
+         <th scope="col">Cost (€)</th>
+       </tr>
+     </thead>
+
+     <tr>
+         <th scope="row">Haircut</th>
+         <td>Hairdresser</td>
+         <td>12/09</td>
+         <td>Great idea</td>
+         <td>30</td>
+     </tr>
+     #+END_SRC
+
+   - id and headers attribute
+     - add a unique id to each =<th>=
+     - =<td>= has space separated list of all its headers in headers
+       attribute.
+
 * Forms
