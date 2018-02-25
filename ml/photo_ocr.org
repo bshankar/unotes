@@ -1,0 +1,75 @@
+#+TITLE: Photo OCR
+
+* The pipeline
+  - Text detection
+  - Character segmentation
+  - Character classification
+  - Spelling correction
+    E.g. C1leaning -> Cleaning
+
+** Sliding Windows (Text detection)
+*** Detecting pedestrians
+    - Aspect ratio is roughly the same
+    - Get 1000 to 10000 82x36 image patches where y = 1 and y = 0
+    - Apply supervised learning and train it with these examples.
+    - Stride parameter/step size. Keep sliding the windows
+    - Repeat for larger rectangles of same aspect ratio
+
+*** Text detection
+    - obtain images with text and without text
+    - Use small rectangles apply it over the whole image
+    - We obtain regions where text might be present with high probability
+    - Apply *Expansion operator* and draw bounding boxes and ignore
+      aspect ratios/shapes don't look right
+    - Cut out these regions and send to the next stage in the pipeline
+
+** Character segmentation
+   - Train a classifier to find the gap between two characters (if present)
+   - Use a 1D sliding window that finds these locations and split
+     individual characters and send to a character classifier
+
+* Getting data, Artificial data synthesis
+  - Once you collect real data
+  - Take a lot of different fonts and paste characters from a font on
+    different backgrounds and we get lots of synthetic data
+    - Needs work to make it look realistic
+    - Apply some distortions
+      - Must /represent distortions that you will encounter/
+      - Adding random/meaningless noise usually doesn't help
+      - For a speech recognition
+        - E.g. bad cellphone network distortions, crowd, machine noise
+    - We now have an unlimited supply of data
+
+** General guidelines
+   - Make sure to have a low bias classifier
+   - How much work would it be to get /10x/ as much data as we currently have?
+     - Artificial data synthesis
+     - Collect/label it yourself (# of hours?)
+     - Crowd source
+
+* Ceiling analysis
+  - Which part of the pipeline should you spend the most time trying
+    to improve?
+  - Pick an evaluation metric E.g. Overall accuracy of 72%
+  - Give correct labels manually (100% accuracy) for text detection
+    ... E.g.
+
+    | Component              | Accuracy |
+    |------------------------+----------|
+    | Overall system         |      72% |
+    | Text detection         |      89% |
+    | Character segmentation |      90% |
+    | Character recognition  |     100% |
+
+  - Going from Overall system -> Text detection gave 17% improvement
+  - Text detection -> segmentation gave 1% improvement
+  - segmentation -> recognition gave 10%
+
+** Another example (Face recognition)
+   - Camera image -> Preprocess (remove background) -> face detection
+
+   - face detection -> Eyes segmentation
+                    -> Nose segmentation    -> logistic regression  -> label
+                    -> Mouth segmentation
+
+   - Choose best area to work on using above method
