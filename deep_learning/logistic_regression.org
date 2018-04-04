@@ -28,6 +28,14 @@
   - $L_i = - y^{(i)} \log{\hat{y^{(i)}}} - (1 - y^{(i)})
     \log{(1 - \hat{y^{(i)}})}}$
 
+** Explanation
+   - $p(y|x) = \hat{y}^y \left (1 - \hat{y}^{(1 - y)}\right )$
+
+   - $P = \prod_{i = 1}^m p(y^{(i)}, x^{(i)})$
+
+   - We need to maximize P => maximize log P or minimize -log P (which
+     is the cost function)
+
 * Gradient Descent
 
   - $w := w - \alpha \frac{\partial J(w, b)}{\partial w}$
@@ -36,4 +44,6 @@
 
   - In code we write dJ/dvar as dvar (convention)
 
-* Vectorization
+* Bugs
+  - Don't use rank 1 arrays. If unavoidable, reshape
+  - assert(a.shape == (3, 2))
