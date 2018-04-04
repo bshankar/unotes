@@ -1,5 +1,5 @@
 #+TITLE: Multivariate Linear Regression
-#+latexpreview
+#+STARTUP: latexpreview
 
 * Formulation
 
@@ -11,7 +11,7 @@
 
 ** Hypothesis function
    $h_\theta(x) = \sum_{j=0}^n \theta_j x_j = \theta^Tx = \theta \cdot
-   x$ 
+   x$
 
    Where $x_0 = 1$ always.
 
@@ -60,7 +60,7 @@
     $\frac{\partial}{\partial \theta_j} J(\theta) = 0$ for all j
 
   - Solve the linear equations!
-    
+
     $\theta = (X^{T}X)^{-1} X^{T}Y$
 
 ** Non-Invertiblity
