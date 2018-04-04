@@ -1,0 +1,39 @@
+* Image unrolling
+  - Each image has 3 matrices RGB pixel intensities
+  - We can put all the pixel values in a feature vector X
+   - For a $M\times N$ image, we get a column vector of size $n_x = 3MN$
+
+* Notation
+  - Each training example $(x, y)$,  $x \in \boldsymbol{R}^{n_x}$, $y
+    \in \{0, 1\}$
+  - There are m such training examples
+
+  - $X \in \boldsymbol{R}^{n_x\times m}$ contains each training
+    examples as columns (better for Neural networks than arranging
+    them in rows)
+
+  - $Y \in \boldsymbol{R}^{1\times m}$ (each y in columns)
+
+* Logistic regression
+  - Given x, we want $\hat{y} = P(y = 1|x)$
+
+  - $x,w \in \boldsymbol{R}^{n_x}$, $b \in \boldsymbol{R}$ output
+    $\hat{y} = \sigma(w^Tx + b)$ where $\sigma(z) = \frac{1}{1 + e^{-z}}$
+
+* Cost function
+  - A convex function
+
+  - $J(w, b) = \frac{1}{m} \sum\limits_{i=1}^m L(\hat{y^{(i)}}, y^{(i)})$
+
+  - $L_i = - y^{(i)} \log{\hat{y^{(i)}}} - (1 - y^{(i)})
+    \log{(1 - \hat{y^{(i)}})}}$
+
+* Gradient Descent
+
+  - $w := w - \alpha \frac{\partial J(w, b)}{\partial w}$
+
+  - (same for b)
+
+  - In code we write dJ/dvar as dvar (convention)
+
+* Vectorization
