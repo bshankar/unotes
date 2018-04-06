@@ -1,0 +1,16 @@
+#+STARTUP: latexpreview
+
+* Notation
+  - The layers are denoted by [1] [2] ...
+  - [1] is the input layer x1, x2, ...
+
+  - The last layer outputs $\hat{y}$
+
+  - We use $W^{[1]}$, $b^{[1]}$ to compute $z^{[1]} = W^{[1]}x +
+    b^{[1]}$ and $a^{[1]} = \sigma(z^{[1]})$
+  - and so on for [2], [3], ... until the last layer
+
+  - Last layer's activation a will be used to compute $\mathcal{L}(a, y)$
+
+  - $a^{[0]} = X$ is the input layer. Input layer is not counted. so a
+    2-layer Neural Network has one hidden layer.
