@@ -1,3 +1,5 @@
+#+STARTUP: latexpreview
+
 * Image unrolling
   - Each image has 3 matrices RGB pixel intensities
   - We can put all the pixel values in a feature vector X
