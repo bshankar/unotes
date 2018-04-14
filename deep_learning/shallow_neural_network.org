@@ -14,3 +14,72 @@
 
   - $a^{[0]} = X$ is the input layer. Input layer is not counted. so a
     2-layer Neural Network has one hidden layer.
+
+* Activation functions
+  - For hidden units, after we center the data, hyperbolic tan is
+    almost always is a better choice (Just a shifted Sigmoid function)
+
+    $g(z^{[l]}) = \tanh{z^{[l]}} = \frac{e^z - e^{-z}}{e^z + e^{-z}}$
+
+  - Use Sigmoid function for the output layer.
+
+** Disadvantage of tanh, sigmoid
+   - As Z becomes large, the gradient becomes very small and slows
+     down gradient descent
+
+   - *Rectified linear function (ReLU)* $a = \max(0, z)$ is better in that
+     way. This function is not differentiable at a = 0 but, assigning
+     it some derivative would work.
+
+   - Use ReLU by default. Leaky ReLU is fine too.
+
+** Activation function shouldn't be linear
+   - Because neural networks will then output a linear activation
+     function of the input
+   - A big neural network with many hidden layers with a linear
+     activation function and Sigmoid function at the output layer is
+     no more expressive than *Logistic regression*
+
+   - *Unless* you are doing a regression problem. Then the output layer
+     can have a linear/identify activation function
+
+* Derivatives
+
+  $\sigma'(z) = \sigma(z) \left (1 - \sigma(z)\right )$
+
+  $\tanh'{z} = 1 - \tanh^2{z}$
+
+** ReLU
+   $g(z) = \max(0, z)$
+
+  $g'(z) = \begin{cases}
+    0 & \mbox{if } x < 0, \\
+    1 & \mbox{if } x > 0, \\
+    \mbox{undefined} & \mbox{at } x = 0
+  \end{cases}$
+
+  - We can set the derivative to 1 at x = 0. Because chance of z being
+    exactly 0 in gradient descent is very low.
+
+  - Similar for leaky ReLU.
+
+    $g(z) = max(0.01z, z)$
+
+* Symmetry breaking
+  - Initialize W's to small random values otherwise all your hidden
+    units will compute the same function due to symmetry!
+  - B's can be initialized to 0s
+
+* Gradient Descent
+** Forward Propagation
+** Backward Propagation
+   - Repeat from last layer (nth) to 1st.
+
+   $dZ^{[k]} = \begin{cases}
+                A^{[k]} - Y & \mbox{if } k = n \\
+                W^{[k + 1]}dZ^{[k+1]}\cdot g^{[k]}(Z^{[k]}) & \mbox{otherwise}
+   \end{cases}$
+
+   $dW^{[k]} = \frac{1}{m} dZ^{[k]} A^{[k-1]}^T$
+
+   $db^{[k]} = \frac{1}{m} \sum\limits_{row} dZ^{[k]}$
