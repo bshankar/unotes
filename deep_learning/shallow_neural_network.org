@@ -74,7 +74,7 @@
 ** Forward Propagation
    - Repeat from first layer to last (nth)
 
-   $Z^{[k]} = W^{[k]}X + b^{[k]}$
+   $Z^{[k]} = W^{[k]}A^{[k-1]} + b^{[k]}$
 
    $A^{[k]} = g^{[k]}(Z^{[k]})$
 
