@@ -72,6 +72,12 @@
 
 * Gradient Descent
 ** Forward Propagation
+   - Repeat from first layer to last (nth)
+
+   $Z^{[k]} = W^{[k]}X + b^{[k]}$
+
+   $A^{[k]} = g^{[k]}(Z^{[k]})$
+
 ** Backward Propagation
    - Repeat from last layer (nth) to 1st.
 
