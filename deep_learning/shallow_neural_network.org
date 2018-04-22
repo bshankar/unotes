@@ -72,20 +72,49 @@
 
 * Gradient Descent
 ** Forward Propagation
+   - Input: $A^{[l-1]}$
+
+   - Output: $a^{[l]}$ and cache $Z^{[l]}, W^{[l]}, b^{[l]}$
+
    - Repeat from first layer to last (nth)
 
-   $Z^{[k]} = W^{[k]}A^{[k-1]} + b^{[k]}$
+   $Z^{[l]} = W^{[l]}A^{[l-1]} + b^{[l]}$
 
-   $A^{[k]} = g^{[k]}(Z^{[k]})$
+   $A^{[l]} = g^{[l]}(Z^{[l]})$
 
 ** Backward Propagation
+   - Input: $dA^{[l]}$
+
+   - Output: $dA^{[l-1]}, dW^{[l]}, db^{[l]}$
+
    - Repeat from last layer (nth) to 1st.
 
-   $dZ^{[k]} = \begin{cases}
-                A^{[k]} - Y & \mbox{if } k = n \\
-                W^{[k + 1]}dZ^{[k+1]}\cdot g'^{[k]}(Z^{[k]}) & \mbox{otherwise}
-   \end{cases}$
+   $dZ^{[k]} = dA^{[l]} \star g'^{[l]}(Z^{[l]})$
 
-   $dW^{[k]} = \frac{1}{m} dZ^{[k]} A^{[k-1]}^T$
+   $dW^{[l]} = \frac{1}{m} dZ^{[l]} A^{[l-1]}^T$
 
-   $db^{[k]} = \frac{1}{m} \sum\limits_{row} dZ^{[k]}$
+   $db^{[l]} = \frac{1}{m} \sum\limits_{row} dZ^{[l]}$
+
+   $dA^{[l-1]} = \begin{cases} & W^{[l]T}dZ^{[l]} \mbox{ if } l \neq L \\
+   & \frac{\partial \mathcal{L}}{\partial a} \mbox{ otherwise } \end{cases}$
+
+* Debugging (matrix dimensions)
+
+  $Z^{[l]}, A^{[l]} \in \boldsymbol{R}^{n^{[l]} \times m}$
+
+  $W^{[l]}, dW^{[l]} \in \boldsymbol{R}^{n^{[l]} \times n^{[l-1]}}$
+
+  $b^{[l]}, db^{[l]} \in \boldsymbol{R}^{n^{[l]} \times 1}$
+
+* Why deep?
+  - In face recognition for example, starting layers detect small
+    features like edges, then eye, nose then put them together to form
+    a face in the outer units.
+
+  - Circuit theory: There are functions you can compute with a L-layer
+    deep Neural Network that shallower networks require exponentially
+    more hidden units to compute.
+    E.g. XOR tree
+
+* Advice
+  - depth should be a hyperparameter.
