@@ -1,0 +1,17 @@
+* Guidelines
+  - Training, Cross-validation/dev set, test set. (60/20/20% was the
+     old standard)
+  - In the 'Big Data' era, like m = 1,000,000 we can use 10k for each
+     of dev and test sets.
+  - dev, test sets should come from the same distribution.
+
+  - Not having a test set might be okay.
+
+* Bias / Variance
+  - If optimal (Bayes) error is almost 0% for a problem (Cat vs Non
+    Cat in humans)
+
+  | Training set Error |            1% |       15% |                 0.5% |                0.5% |
+  | Dev set Error      |           11% |       16% |                  30% |                  1% |
+  |                    |               |           |                      |                     |
+  | Diagnosis          | High variance | High Bias | High Bias & Variance | Low Bias & Variance |
