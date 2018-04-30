@@ -116,5 +116,10 @@
     more hidden units to compute.
     E.g. XOR tree
 
-* Advice
-  - depth should be a hyperparameter.
+* Hyperparameters
+  - $\alpha$ (learning rate), # of iterations, # of hidden layers
+    (L), # of hidden units in each, choice of activation function etc.
+
+  - These determine the parameters W and b.
+
+  - The empirical process: idea, code, experiment cycle
