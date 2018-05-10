@@ -1,3 +1,5 @@
+#+STARTUP: latexpreview
+
 * Guidelines
   - Training, Cross-validation/dev set, test set. (60/20/20% was the
      old standard)
@@ -15,3 +17,64 @@
   | Dev set Error      |           11% |       16% |                  30% |                  1% |
   |                    |               |           |                      |                     |
   | Diagnosis          | High variance | High Bias | High Bias & Variance | Low Bias & Variance |
+
+* Recipe
+  - Do a simple ML model and then
+
+  #+BEGIN_SRC dot :file recipe.png :cmdline -Kdot -Tpng
+  digraph recipe {
+    rankdir=LR
+
+    hb [label="High Bias?"]
+    hbs [label="Bigger Network\n Train longer\n NN architecture\n (fit training set)"]
+    hv [label="High Variance?"]
+    hvs [label="More data\n Regularization\n NN architecture"]
+    hb -> hbs [label="Y"]
+
+    hb -> hv [label="N"]
+    hv -> hvs [label="Y"]
+    hv -> done [label="N"]
+  }
+  #+END_SRC
+
+  #+RESULTS:
+  [[file:recipe.png]]
+
+* Regularization
+  - Reduces variance
+
+  $J(w, b) = \frac{1}{m}\sum\limits_{i=1}^m \mathcal{L}(\hat{y}^{(i)},
+  y^{(i)}) + \frac{\lambda}{2m} || W ||^2$
+
+  - We just omit b because almost all parameters are in W.
+
+  - This is L2 regularization (most commonly used)
+
+  # ???
+  - L1 regularization doesn't square W. It makes W matrix sparse
+
+** Dropout regularization
+   - Randomly cull some nodes in the neural network (on every iteration)
+   - J is not very well defined now. Calculate J without dropouts
+     while plotting to check gradient descent.
+
+*** Inverted dropout
+    - Can't rely on one feature so have to spread out weights
+    - It's like an adaptive form of L2 regularization
+    - We can vary keep_prob between layers
+    - Used frequently in *Computer Vision*
+
+    #+BEGIN_SRC python
+    d3 = np.random.rand(a3.shape[0], a3.shape[1]) < keep_prob
+    a3 = np.multiply(a3, d3)
+    a3 /= keep_prob
+    #+END_SRC
+
+** Other methods
+*** Data augmentation
+*** Early stopping
+    - If dev set error goes down for a while and then rises, then stop
+      iterations of gradient descent there.
+    - *Orthogonalization* is lost. While trying to prevent over-fitting,
+      we are not minimizing J enough.
+    - Better to use L2 regularization
