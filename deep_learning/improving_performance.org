@@ -78,3 +78,49 @@
     - *Orthogonalization* is lost. While trying to prevent over-fitting,
       we are not minimizing J enough.
     - Better to use L2 regularization
+
+* Normalizing inputs
+  - Center the data around the origin and spread them equally around
+    the origin. Speeds up gradient descent.
+
+  - Mean: -$\mu = \frac{1}{m}\sum_{i=1}^m X^{(i)}$
+
+  - Variance: $\sigma^2 = \frac{1}{m} \sum_{i=1}^m X^{(i)} ** 2$
+
+  - New features j$x = \frac{x - \mu}{\sigma^2}$
+* Vanishing/Exploding Gradients
+  - Deep Neural networks can have this problem
+** Weight initialization
+   - for large n, we need small weights. So,
+
+   - If g(z) = ReLU(z), then we need to change things such that
+
+     $\sigma^2(w_i) = \frac{2}{n}$ we can set
+
+     #+BEGIN_SRC python
+     W_l = np.random.randn(shape)*np.sqrt(2/n_{l-1})
+     #+END_SRC
+
+   - if g(z) is tanh(z), use Xavier initialization
+
+     $\sqrt{\frac{1}{n^{[l-1]}}}$ or $\sqrt{\frac{2}{n^{[l-1]} + n^{[l]}}}$
+
+* Gradient checking
+
+  $f'(\theta) = \lim_{\epsilon \to 0} \frac{f(\theta + \epsilon) -
+  f(\theta - \epsilon)}{2\epsilon} + O(\epsilon^2)$
+
+  - This should be approximately equal to $d\theta$
+
+  - E.g. use $\epsilon \approx 10^{-7}$ and check if
+
+    $\frac{||d\theta_{approx} -
+    d\theta||}{||d\theta_{approx}|| + ||d\theta||} \leq 10^{-7}$
+
+  - Use only to debug, find where grad approx is different.
+  - Don't forget regularization
+  - It doesn't work with dropout. Turn it off, check, then turn on.
+
+  - Gradient check /after/ some training because gradients may be
+    approximately correct when weights are randomly initialized to
+    very small values.
