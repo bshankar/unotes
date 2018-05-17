@@ -1,0 +1,262 @@
+* Intro
+** Some C++ code
+   - =ptr= could be null, mutated or invalid. We may forget these checks
+
+#+BEGIN_SRC c++
+void f(Foo *ptr) {
+  if (!ptr) return;
+
+  ptr->g();
+}
+   #+END_SRC
+
+** Same code in Rust
+   - Safe!
+
+#+BEGIN_SRC rust
+fn f(ptr: Option<&Foo>) {
+    match ptr {
+        Some(ptr) => ptr.g(),
+        None => {}
+    }
+}
+  #+END_SRC
+
+
+* Pattern matching
+  - Exhaustive, _ to ignore
+  - Match can be used as an expression and binds variables
+    in it
+
+#+BEGIN_SRC rust
+enum Foo { A(i32), B, C }
+
+let foo = match x {
+  Foo::A(n) => n,
+  _ => 0
+}
+  #+END_SRC
+
+
+* Option, Result types
+  - =Result= is the Rust's error handler
+#+BEGIN_SRC rust
+enum Option<T> {
+    Some(T),
+    None,
+}
+
+enum Result<T> {
+    Ok(T),
+    Err(E),
+}
+
+// example
+fn h(i: i32) -> Result<i32, String> {
+    match i {
+        i if i >= 0 => Ok(i + 10),
+        _ => Err(format!("Input to h less than 0, found {}", i)),
+    }
+}
+
+fn main() {
+    let input: i32 = ...;
+    match h(input) {
+        Ok(result) => println!("Result: {}", result),
+        Err(e) => println!("Error: {}", e)
+    }
+}
+#+END_SRC
+
+** Control flows
+
+#+BEGIN_SRC rust
+match h() {
+    ok(i) => {
+        // do something with i
+    }
+    _ => {}  // or return error
+}
+
+// non exhaustive pattern matching
+if let Ok(i) = h() {
+    // do something with i
+}
+#+END_SRC
+
+#+BEGIN_SRC rust
+let i = match h() {
+    Ok(i) => i,
+    err => return err
+}
+
+// is so common that we have a short syntax for this
+let i = h()?;
+let j = h()?.foo()?.bar;
+#+END_SRC
+
+** Some methods
+   - map
+   - and, or (eager version)
+   - and_then, or_else (short circuiting)
+
+   - ok_or, ok_or_else converts Option -> result
+   - iter converts it into iterator
+
+#+BEGIN_SRC rust
+fn maybe_add_four(y: Option<i32>) -> Option<i32> {
+    y.map(|x| x + 4)
+}
+#+END_SRC
+
+** Exercise
+   - Fix this badly written code
+
+#+BEGIN_SRC rust
+fn foo(input: Option<i32>) -> Option<i32> {
+    if input.is_none() {
+        return None;
+    }
+
+    let input = input.unwrap();
+    if input < 0 {
+        return None;
+    }
+    Some(input)
+}
+
+fn bar(input: Option<i32>) -> Result<i32, ErrNegative> {
+    match foo(input) {
+        Some(n) => Ok(n),
+        None => Err(ErrNegative),
+    }
+}
+#+END_SRC
+
+#+BEGIN_SRC rust
+// fixed code
+fn foo(input: Option<i32>) -> Option<i32> {
+    input.filter(|i| i >= 0)
+}
+
+fn bar(input: Option<i32>) -> Result<i32, ErrNegative> {
+    input.ok_or(ErrNegative)
+}
+#+END_SRC
+
+
+* Iterators
+  - Some C++ iteration
+  - c_foo could be wrong, =foos=, i could be mutated inside loop
+  - logic errors, <, <=
+  - =foos= could be null or invalid
+
+#+BEGIN_SRC c++
+void ping_all(Foo[] foos, int c_foo) {
+  for (int i = 0; i < c_foo; ++i) {
+    foos[i].ping();
+  }
+}
+#+END_SRC
+
+#+BEGIN_SRC rust
+fn ping_all(foos: &[Foo]) {
+    foos.iter().for_each(|f| f.ping());
+}
+#+END_SRC
+
+** Some methods
+   - map, filter, for_each
+   - chain, enumerate, collect
+   - trait =IntoIterator=. A Vec implements it. So, &vec is an iterator.
+
+#+BEGIN_SRC rust
+let vec = vec![0, 1, 2, 3];
+for (i, v) in vec.iter().chain(Some(42).iter()).enumerate() {
+    println!("{}: {}", i, v);
+}
+
+let vec2: Vec< > = vec.iter().map(|x| x * 2).collect();
+let map: HashMap< , > = vec.iter()
+    .map(|x| x * 2).enumerate().collect()
+
+#+END_SRC
+
+#+BEGIN_SRC rust
+let vec = vec![0, 1, 2, 3];
+let mut iter = (&vec).into_iter();
+
+while let Some(v) = iter.next() {
+    println!("{}", v);
+}
+
+// loop {}, match, break
+#+END_SRC
+
+
+* Error Handling
+  - Must be thought out early on
+  - Result type can give Err type
+  - Wrong to give the error to the user
+
+** Options
+   - *Recover*, E.g. Use a default value
+   - *Re-throw* E.g. the ? operator
+   - *Panic* Crash in a safe way.
+
+** Tips
+   - Error -> Try to recover, retry -> Show user/ Panic
+   - Use simple error types {}, 1, 2, 3 (error codes), String
+   - Multiple error types with structs, enums
+   - Check /Failure/ library
+
+** What to do?
+*** Library
+    - Use own error type
+    - Consider error boundaries
+    - Use /Failure/ library
+*** App
+    - Script: maybe *panic*
+    - Prototype: Lightweight error handling like string
+    - Production: Full on error handling library
+
+  - Panic -> lightweight/Full is hard but not v.v
+
+#+BEGIN_SRC rust
+// panic
+let n = foo().expect("Something bad happened here");
+
+// aliasing Result type
+type myResult<T> = Result<T, MyErr>;
+#+END_SRC
+
+
+* Ownership
+  # ???
+
+* Traits
+  # ???
+  - are the language/lib interface
+  - E.g Iterator, Deref, Index traits
+  - Guarantees safety. E.g. Send and Sync traits
+  - *Use more traits!*
+
+** Good trait
+   - small
+   - independent
+   - inherent impls: behavior specific to data
+   - traits: generic behavior, API
+
+#+BEGIN_SRC rust
+trait Foo { ...}
+impl Foo for SomeType { ... }
+#+END_SRC
+
+| Classes                         | Trait                                 |
+|---------------------------------+---------------------------------------|
+| Share behavior, data            | Share behavior                        |
+| Heirarchical                    | mostly unstructured                   |
+| Inheritance declared with class | implementations can be added post-hoc |
+
+* Reference
+  - [[https://www.youtube.com/redirect?redir_token=a6sK3_atHER9g1nmVx3KbZ6sdjx8MTUyNjYzMjk1M0AxNTI2NTQ2NTUz&v=vqavdUGKeb4&q=http%253A%252F%252Flca2018.linux.org.au%252Fschedule%252Fpresentation%252F22%252F&event=video_description][Rust Programming Techniques]]
