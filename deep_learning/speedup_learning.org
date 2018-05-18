@@ -1,0 +1,146 @@
+#+STARTUP: latexpreview
+
+* Batch vs mini-batch gradient descent
+  - if m = 5M or 50M even vectorized gradient descent will be slow
+  - can be split into mini batches of size 1000 each. A mini-batch
+
+    $t: X^{\{t\}}, Y^{\{t\}}$
+
+  - batch GD is when you process everything at once.
+  - Cost vs mini-batch # will oscillate by decrease overall
+
+| mini-batch size | name          | learning rate/iteration  | comment                               |
+|-----------------+---------------+--------------------------+---------------------------------------|
+| m               | batch GD      | fastest                  | too long/ iteration, fully vectorized |
+| < m (~ 1000)    | mini-batch GD | medium                   | fastest learning                      |
+| 1               | Stochastic GD | noisy, slow, comes close | loose speedup, no vectorization       |
+
+#+BEGIN_SRC
+repeat until convergence:
+    for t = 1 to 5000:
+        # 1 step of Gradient Descent using X{t}, Y{t}
+        # forward propagation
+        # Compute cost
+        # Backpropagation
+        # update W, b ...
+#+END_SRC
+
+** Choosing
+   - make sure your data fits in the CPU/GPU memory
+   - mini-batch size is a /hyperparameter/ too
+
+| m       | batch size               |
+|---------+--------------------------|
+| <= 2000 | m                        |
+| typical | powers of 2 (64 to 1024) |
+
+* Exponentially weighted moving average
+
+  $v_t = \beta v_{t - 1} + (1 - \beta) \theta_t$
+
+  then, $v_t = \sum_{i=0}^t (1 - \beta)\beta^{t - i} \theta_i$
+
+  - $v_t$ is the average temperature over $\approx \frac{1}{1 -
+    \beta}$ days because it decays to about 1/3rd after that
+
+    time assuming beta is close to 1. (from limit definition of e)
+
+  - beta is a hyperparameter
+  - More efficient than keeping a window in memory and averaging over
+    last n days.
+
+** Bias correction
+   - On the starting few days, $v_t$ (as defined above) starts really low because
+     of $v_0$
+
+   - so we calculate $\frac{v_t}{1 - \beta^{t}}$ instead. The
+
+     additional factor tends to 0 as t becomes large.
+
+* GD with momentum
+  - almost always faster than GD because it reduces sideways oscillations
+  - Use exponentially weighted average of your gradients to update the
+    W, b
+
+  - /beta = 0.9/ works quite well
+  - Physics analogy is a ball rolling downhill to the minimum.
+
+| symbol | analogous to |
+|--------+--------------|
+| V      | velocity     |
+| beta   | friction     |
+| dW, db | acceleration |
+
+  - On every iteration,
+
+#+BEGIN_SRC python
+# compute dW, db on current mini-batch
+V_dw = beta*V_dw + (1 - beta)*dW
+v_db = beta*V_db + (1 - beta)*db
+
+# update weights
+W = W - alpha*V_dw
+b = b - alpha*V_db
+#+END_SRC
+
+* RMSprop
+  - On iteration t
+
+#+BEGIN_SRC python
+# compute dW, db on current mini-batch
+S_dw = beta*S_dw + (1 - beta)*dW**2
+S_db = beta*S_db + (1 - beta)*db**2
+
+W = W - alpha*dW/sqrt(S_dw + epsilon)
+b = b - alpha*db/sqrt(S_db + epsilon)
+#+END_SRC
+
+* Adam optimization algorithm
+  - adaptive momentum estimation
+
+#+BEGIN_SRC python
+V_dw = S_dw = V_db = S_db = 0
+
+# then, on iteration t
+# compute dW, db on current mini-batch
+V_dw = beta*V_dw + (1 - beta)*dW
+v_db = beta*V_db + (1 - beta)*db
+
+S_dw = beta1*S_dw + (1 - beta1)*dW**2
+S_db = beta1*S_db + (1 - beta1)*db**2
+
+# bias correct Vs and S
+...
+
+# update
+W = W - alpha*V_dw/(sqrt(S_dw) + epsilon)
+b = b - alpha*V_db/(sqrt(S_dw) + epsilon)
+#+END_SRC
+
+| hyperparameter |  good values |
+|----------------+--------------|
+| alpha          | needs tuning |
+| beta           |          0.9 |
+| beta1          |        0.999 |
+| epsilon        | 1e-8         |
+
+* Learning rate decay
+  - Slowly reducing the learning rate over number of iterations can
+    make the algorithm oscillate around a tighter region around the minimum.
+
+  - 1 epoch = 1 pass through data. On the kth epoch and decay rate eta,
+
+  $\alpha = \frac{1}{1 + k\eta}$
+
+    $\alpha = \beta^k\alpha_0$ (exponential decay, different beta)
+
+
+  $\alpha = \frac{c}{\sqrt{k}} \alpha_0$
+
+* Problem of local optima
+  - In practice most points are *saddle points* not local minima because
+    the probability of a local minima is very low as the number of
+    dimensions is high.
+
+  - Plateaus exist where gradients are close to 0. They really slow
+    down learning
