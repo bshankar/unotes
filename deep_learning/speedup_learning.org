@@ -96,6 +96,7 @@ b = b - alpha*db/sqrt(S_db + epsilon)
 #+END_SRC
 
 * Adam optimization algorithm
+  - [[https://arxiv.org/pdf/1412.6980.pdf][Adam paper]]
   - adaptive momentum estimation
 
 #+BEGIN_SRC python
