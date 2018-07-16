@@ -10,8 +10,8 @@
     grows large.
 
   - If we replace this function by 2 lines
-    - A straight line that is 0 at z = 1 and grows for negative z
-    - A flat y axis = 0 line for z > 1
+    - A straight line that is 0 at z = 1 and grows for negative z (i.e y = 1-z)
+    - A flat z-axis (i.e y = 0) line for z > 1
 
   - This new cost function, c_1(z) combined with its mirror
     reflection (w.r.t y axis) for y = 0, c_0(z) closely resembles the cost
